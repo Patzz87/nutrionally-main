@@ -114,8 +114,8 @@ export default function Home({lang}) {
           <div style={{fontSize:13, color:"#3A5BA0", marginBottom:20, fontFamily:F}}>{isES?"Nuevas herramientas y guías directamente en tu correo.":"New tools and guides directly in your inbox."}</div>
           <div style={{display:"flex", gap:8}}>
             <input type="email" placeholder={isES?"tu@correo.com":"your@email.com"} style={{flex:1, padding:"9px 12px", borderRadius:8, border:"0.5px solid #D4E3FF", fontSize:13, color:NAVY, background:"#F5F7FF", outline:"none", fontFamily:F}}/>
-            <button style={{background:TEAL, color:"#fff", border:"none", padding:"9px 18px", borderRadius:8, fontSize:13, fontWeight:500, cursor:"pointer", fontFamily:F, whiteSpace:"nowrap"}}>
-              {isES?"Suscribirse":"Subscribe"}
+            <button onClick={async()=>{if(!email)return;const ok=await subscribeToBrevo(email);setSubStatus(ok?"ok":"err");if(ok)setEmail("");}} style={{background:TEAL, color:"#fff", border:"none", padding:"9px 18px", borderRadius:8, fontSize:13, fontWeight:500, cursor:"pointer", fontFamily:F, whiteSpace:"nowrap"}}>
+              {subStatus==="ok"?(isES?"Suscrito ✓":"Subscribed ✓"):isES?"Suscribirse":"Subscribe"}
             </button>
           </div>
         </div>
