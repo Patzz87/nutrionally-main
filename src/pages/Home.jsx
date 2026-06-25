@@ -4,9 +4,28 @@ const TEAL = "#2A9D8F";
 const NAVY = "#1E2D4E";
 const BLUE = "#2563EB";
 
+async function subscribeToBrevo(email) {
+  const res = await fetch('https://api.brevo.com/v3/contacts', {
+    method: 'POST',
+    headers: {
+      'accept': 'application/json',
+      'content-type': 'application/json',
+      'api-key': import.meta.env.VITE_BREVO_API_KEY,
+    },
+    body: JSON.stringify({
+      email: email,
+      listIds: [6],
+      updateEnabled: true,
+    }),
+  });
+  return res.status === 201 || res.status === 204;
+}
+
 export default function Home({lang}) {
   const navigate = useNavigate();
   const isES = lang === "ES";
+  const [email, setEmail] = useState("");
+  const [subStatus, setSubStatus] = useState(null);
   return (
     <div>
       <div style={{background:NAVY, padding:"60px 32px 52px", textAlign:"center"}}>
