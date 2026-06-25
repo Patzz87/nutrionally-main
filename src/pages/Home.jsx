@@ -6,7 +6,6 @@ const NAVY = "#1E2D4E";
 const BLUE = "#2563EB";
 
 async function subscribeToBrevo(email) {
-  console.log("API KEY:", import.meta.env.VITE_BREVO_API_KEY);
   const res = await fetch('https://api.brevo.com/v3/contacts', {
     method: 'POST',
     headers: {
