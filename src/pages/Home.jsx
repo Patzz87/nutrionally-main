@@ -72,19 +72,20 @@ export default function Home({lang}) {
         <div style={{fontSize:13, color:"#3A5BA0", marginBottom:28, fontFamily:F}}>{isES?"Desde estudiantes hasta profesionales y pacientes.":"From students to professionals and patients."}</div>
         <div style={{display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:12}}>
           {[
-            {icon:"🧮", name:"nutrionally learn", desc: isES?"Calculadora clínica con plan de intercambios y modo estudio.":"Clinical calculator with exchange plan and study mode.", tag: isES?"Gratis":"Free", tagColor:"#E1F5EE", tagText:"#0F6E56", href:"https://learn.nutrionally.com"},
-            {icon:"🩺", name:"nutrionally pro", desc: isES?"Gestión de pacientes y reportes clínicos para profesionales.":"Patient management and clinical reports for professionals.", tag: isES?"Próximamente":"Coming soon", tagColor:"#EFF6FF", tagText:"#185FA5"},
-            {icon:"🥗", name:"nutrionally health", desc: isES?"Calculadora simple de macros para el público general.":"Simple macro calculator for the general public.", tag: isES?"Próximamente":"Coming soon", tagColor:"#EFF6FF", tagText:"#185FA5"},
-            {icon:"❤️", name:"nutrionally conditions", desc: isES?"Herramientas por condición: DM2, hipertensión, obesidad.":"Condition tools: DM2, hypertension, obesity.", tag: isES?"Próximamente":"Coming soon", tagColor:"#EFF6FF", tagText:"#185FA5"},
+                        {icon:"🧮", name:"nutrionally learn", desc: isES?"Calculadora clínica completa: intercambios INCAP/USDA, Harris-Benedict, NPT/NE, modo estudio y casos clínicos.":"Complete clinical calculator: INCAP/USDA exchanges, Harris-Benedict, TPN/EN, study mode and clinical cases.", tag: isES?"Gratis":"Free", tagColor:"#E1F5EE", tagText:"#0F6E56", href:"https://learn.nutrionally.com", clickable:true},
+            {icon:"📊", name:isES?"Calculadoras de salud":"Health calculators", desc: isES?"15+ calculadoras: IMC, TDEE, macros, índice glucémico, verificador de gluten, tracker de sodio y más.":"15+ calculators: BMI, TDEE, macros, glycemic index, gluten checker, sodium tracker and more.", tag: isES?"Gratis":"Free", tagColor:"#E1F5EE", tagText:"#0F6E56", href:"/tools", clickable:true},
+            {icon:"📚", name:isES?"Guías por condición":"Condition guides", desc: isES?"12 guías clínicas: DM2, HTN, obesidad, ERC, artritis, gota, fertilidad, alergias, embarazo, cáncer, colesterol, tiroides.":"12 clinical guides: T2DM, HTN, obesity, CKD, arthritis, gout, fertility, allergies, pregnancy, cancer, cholesterol, thyroid.", tag: isES?"Gratis":"Free", tagColor:"#E1F5EE", tagText:"#0F6E56", href:"/conditions", clickable:true},
+            {icon:"📄", name:isES?"Recursos y guías PDF":"Resources and PDF guides", desc: isES?"Guías clínicas descargables, planes de alimentación y recursos para profesionales de la salud.":"Downloadable clinical guides, meal plans and resources for health professionals.", tag: isES?"Próximamente":"Coming soon", tagColor:"#F5F7FF", tagText:"#3A5BA0", href:null, clickable:false},
           ].map(p=>(
-            <div key={p.name} style={{background:"#fff", border:"0.5px solid #D4E3FF", borderRadius:12, padding:"20px 16px"}}>
-              <div style={{fontSize:24, marginBottom:12}}>{p.icon}</div>
-              <div style={{fontSize:13, fontWeight:500, color:NAVY, marginBottom:4, fontFamily:F}}>{p.name}</div>
-              <div style={{fontSize:11, color:"#3A5BA0", lineHeight:1.5, marginBottom:12, fontFamily:F}}>{p.desc}</div>
-              {p.href
-                ? <a href={p.href} target="_blank" rel="noopener noreferrer" style={{fontSize:10, padding:"2px 8px", borderRadius:10, background:p.tagColor, color:p.tagText, textDecoration:"none", fontFamily:F, fontWeight:500}}>{p.tag}</a>
-                : <span style={{fontSize:10, padding:"2px 8px", borderRadius:10, background:p.tagColor, color:p.tagText, fontFamily:F}}>{p.tag}</span>
-              }
+            <div key={p.name}
+              onClick={()=>{if(!p.clickable)return;if(p.href&&p.href.startsWith("http")){window.open(p.href,"_blank");}else if(p.href){window.location.href=p.href;}}}
+              onMouseEnter={e=>{if(p.clickable){e.currentTarget.style.borderColor="#2A9D8F";e.currentTarget.style.background="#F9FFFD";}}}
+              onMouseLeave={e=>{e.currentTarget.style.borderColor="#D4E3FF";e.currentTarget.style.background="#fff";}}
+              style={{background:"#fff",border:"0.5px solid #D4E3FF",borderRadius:12,padding:"20px 16px",cursor:p.clickable?"pointer":"default",transition:"all 0.2s"}}>
+              <div style={{fontSize:24,marginBottom:12}}>{p.icon}</div>
+              <div style={{fontSize:13,fontWeight:500,color:NAVY,marginBottom:4,fontFamily:F}}>{p.name}</div>
+              <div style={{fontSize:11,color:"#3A5BA0",lineHeight:1.5,marginBottom:12,fontFamily:F}}>{p.desc}</div>
+              <span style={{fontSize:11,fontWeight:500,padding:"3px 10px",borderRadius:20,background:p.tagColor,color:p.tagText,fontFamily:F}}>{p.tag}</span>
             </div>
           ))}
         </div>
