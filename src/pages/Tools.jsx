@@ -132,6 +132,74 @@ function BodyFatCalc({isES, units="metric"}) {
   );
 }
 
+
+function VO2maxCalc({isES, units="metric"}) {
+  const [weight, setWeight] = useState("");
+  const [age, setAge] = useState("");
+  const [sex, setSex] = useState("male");
+  const [restHR, setRestHR] = useState("");
+  const [maxHR, setMaxHR] = useState("");
+  const [method, setMethod] = useState("karvonen");
+
+  let vo2 = null;
+  let category = null;
+  let categoryColor = null;
+
+  if (method === "karvonen") {
+    if (maxHR && restHR) {
+      const hr = parseFloat(maxHR); const rhr = parseFloat(restHR);
+      if (hr > 0 && rhr > 0) vo2 = +(15 * (hr / rhr)).toFixed(1);
+    }
+  } else if (method === "non_exercise") {
+    if (age) {
+      const a = parseFloat(age);
+      const s = sex === "male" ? 1 : 0;
+      vo2 = +(56.363 - (0.381 * a) + (10.987 * s)).toFixed(1);
+    }
+  }
+
+  if (vo2 !== null) {
+    if (sex === "male") {
+      if (vo2 >= 55) { category = isES ? "Superior" : "Superior"; categoryColor = "#16a34a"; }
+      else if (vo2 >= 48) { category = isES ? "Excelente" : "Excellent"; categoryColor = "#22c55e"; }
+      else if (vo2 >= 42) { category = isES ? "Bueno" : "Good"; categoryColor = "#84cc16"; }
+      else if (vo2 >= 36) { category = isES ? "Regular" : "Fair"; categoryColor = "#eab308"; }
+      else { category = isES ? "Bajo" : "Low"; categoryColor = "#ef4444"; }
+    } else {
+      if (vo2 >= 49) { category = isES ? "Superior" : "Superior"; categoryColor = "#16a34a"; }
+      else if (vo2 >= 42) { category = isES ? "Excelente" : "Excellent"; categoryColor = "#22c55e"; }
+      else if (vo2 >= 36) { category = isES ? "Bueno" : "Good"; categoryColor = "#84cc16"; }
+      else if (vo2 >= 30) { category = isES ? "Regular" : "Fair"; categoryColor = "#eab308"; }
+      else { category = isES ? "Bajo" : "Low"; categoryColor = "#ef4444"; }
+    }
+  }
+
+  return (
+    <CalcCard title={isES?"Calculadora de VO2max":"VO2max Calculator"} desc={isES?"Consumo máximo de oxígeno — capacidad cardiorrespiratoria":"Maximal oxygen uptake — cardiorespiratory fitness"}>
+      <Select label={isES?"Método":"Method"} value={method} onChange={setMethod} options={[
+        {value:"karvonen", label:isES?"Karvonen (FC máx / FC reposo)":"Karvonen (HRmax / HRrest)"},
+        {value:"non_exercise", label:isES?"Estimación sin ejercicio (edad + sexo)":"Non-exercise estimate (age + sex)"},
+      ]}/>
+      <Select label={isES?"Sexo biológico":"Biological sex"} value={sex} onChange={setSex} options={[
+        {value:"male", label:isES?"Masculino":"Male"},
+        {value:"female", label:isES?"Femenino":"Female"},
+      ]}/>
+      {method==="karvonen"&&<><Input label={isES?"FC máxima (lpm)":"Max heart rate (bpm)"} value={maxHR} onChange={setMaxHR} unit="lpm"/><Input label={isES?"FC en reposo (lpm)":"Resting heart rate (bpm)"} value={restHR} onChange={setRestHR} unit="lpm"/></>}
+      {method==="non_exercise"&&<Input label={isES?"Edad (años)":"Age (years)"} value={age} onChange={setAge} unit={isES?"años":"yrs"}/>}
+      {vo2!==null&&<>
+        <Result label="VO2max" value={vo2} unit="ml/kg/min"/>
+        <div style={{marginTop:8,padding:"10px 14px",borderRadius:8,background:"#F5F7FF",border:"0.5px solid #D4E3FF",fontFamily:F}}>
+          <span style={{fontSize:12,color:"#3A5BA0"}}>{isES?"Categoría ACSM: ":"ACSM category: "}</span>
+          <span style={{fontSize:13,fontWeight:600,color:categoryColor}}>{category}</span>
+        </div>
+        <div style={{marginTop:8,fontSize:11,color:"#3A5BA0",fontFamily:F}}>
+          {method==="karvonen"?(isES?"Fórmula: VO2max = 15 × (FCmáx ÷ FCrep) — Karvonen":"Formula: VO2max = 15 × (HRmax ÷ HRrest) — Karvonen"):(isES?"Estimación basada en edad y sexo (Jackson 1990).":"Estimate based on age and sex (Jackson 1990).")}
+        </div>
+      </>}
+    </CalcCard>
+  );
+}
+
 function WaterCalc({isES, units="metric"}) {
   const [weight,setWeight]=useState("");const [activity,setActivity]=useState("moderate");
   let water=null;
@@ -716,6 +784,7 @@ const GROUPS = [
     {id:"water", es:"Agua", en:"Water intake"},
     {id:"hr", es:"Frecuencia cardíaca", en:"Heart rate"},
     {id:"sodium", es:"Tracker de sodio", en:"Sodium tracker"},
+    {id:"vo2max", es:"VO2max", en:"VO2max"},
   ]},
 ];
 
@@ -726,7 +795,7 @@ export default function Tools({lang}) {
   const [units, setUnits] = useState("metric");
   useState(()=>{
     const hash = window.location.hash.replace("#","");
-    const allTools = ["bmi","bodyfat","ideal","tdee","macro","carb","protein","fat","water","hr","glycemic","gluten","sodium","exercise","fiber"];
+    const allTools = ["bmi","bodyfat","ideal","tdee","macro","carb","protein","fat","water","hr","glycemic","gluten","sodium","exercise","fiber","vo2max"];
     if(allTools.includes(hash)) setActive(hash);
   });
   return (
@@ -765,6 +834,7 @@ export default function Tools({lang}) {
         {active==="ideal"&&<IdealWeightCalc isES={isES} units={units}/>}
         {active==="bodyfat"&&<BodyFatCalc isES={isES} units={units}/>}
         {active==="water"&&<WaterCalc isES={isES} units={units}/>}
+        {active==="vo2max"&&<VO2maxCalc isES={isES} units={units}/>}
         {active==="hr"&&<HeartRateCalc isES={isES}/>}
         {active==="glycemic"&&<GlycemicCalc isES={isES}/>}
         {active==="gluten"&&<GlutenCalc isES={isES}/>}
