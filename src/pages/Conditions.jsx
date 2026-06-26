@@ -1,3 +1,4 @@
+import { useMeta } from "../hooks/useMeta.js";
 import { useState } from "react";
 const F = "Plus Jakarta Sans, sans-serif";
 const TEAL = "#2A9D8F";
@@ -877,6 +878,7 @@ function GoutPage({isES}) {
 
 export default function Conditions({lang}) {
   const isES = lang === "ES";
+  if(isES) {useMeta({title:"Guías de nutrición por condición clínica — Nutrionally", description:"Guías nutricionales para DM2, hipertensión, obesidad, ERC, artritis, gota, fertilidad, alergias, embarazo, cáncer, colesterol y tiroides.", url:"https://nutrionally.com/conditions"});} else {useMeta({title:"Nutrition guides by clinical condition — Nutrionally", description:"Nutritional guides for T2DM, hypertension, obesity, CKD, arthritis, gout, fertility, allergies, pregnancy, cancer, cholesterol and thyroid.", url:"https://nutrionally.com/conditions"});}
   const [active, setActive] = useState("dm2");
   const conditions = [
     {id:"dm2", es:"Diabetes mellitus tipo 2", en:"Type 2 diabetes mellitus", color:RED, bg:REDBG},

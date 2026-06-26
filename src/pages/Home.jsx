@@ -1,3 +1,4 @@
+import { useMeta } from "../hooks/useMeta.js";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 const F = "Plus Jakarta Sans, sans-serif";
@@ -25,6 +26,7 @@ async function subscribeToBrevo(email) {
 export default function Home({lang}) {
   const navigate = useNavigate();
   const isES = lang === "ES";
+  if(isES) {useMeta({title:"Nutrionally — Nutrición clínica gratuita", description:"Calculadoras de nutrición gratis: IMC, TDEE, macros, índice glucémico. Guías para DM2, hipertensión y más. Bilingüe.", url:"https://nutrionally.com"});} else {useMeta({title:"Nutrionally — Free clinical nutrition", description:"Free nutrition calculators: BMI, TDEE, macros, glycemic index. Guides for T2DM, hypertension and more. Bilingual.", url:"https://nutrionally.com"});}
   const [email, setEmail] = useState("");
   const [subStatus, setSubStatus] = useState(null);
   return (

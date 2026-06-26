@@ -1,3 +1,4 @@
+import { useMeta } from "../hooks/useMeta.js";
 import { useState } from "react";
 const F = "Plus Jakarta Sans, sans-serif";
 const TEAL = "#2A9D8F";
@@ -6,6 +7,7 @@ const BLUE = "#2563EB";
 
 export default function About({lang}) {
   const isES = lang === "ES";
+  if(isES) {useMeta({title:"Nosotros — Nutrionally", description:"Nutrionally es una plataforma de nutrición clínica gratuita, bilingüe y basada en evidencia para profesionales y estudiantes en Latinoamérica.", url:"https://nutrionally.com/about"});} else {useMeta({title:"About — Nutrionally", description:"Nutrionally is a free, bilingual, evidence-based clinical nutrition platform for professionals and students in Latin America.", url:"https://nutrionally.com/about"});}
   return (
     <div style={{maxWidth:800, margin:"0 auto", padding:"60px 32px"}}>
 

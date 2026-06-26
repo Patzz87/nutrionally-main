@@ -1,3 +1,4 @@
+import { useMeta } from "../hooks/useMeta.js";
 import { useState } from "react";
 const F = "Plus Jakarta Sans, sans-serif";
 const TEAL = "#2A9D8F";
@@ -317,6 +318,7 @@ function PostContent({blocks, isES, navigate}) {
 
 export default function Blog({lang}) {
   const isES = lang === "ES";
+  if(isES) {useMeta({title:"Blog de nutrición clínica — Nutrionally", description:"Artículos de nutrición clínica basados en evidencia: IMC, diabetes, índice glucémico, tiroides, gota, embarazo y más.", url:"https://nutrionally.com/blog"});} else {useMeta({title:"Clinical nutrition blog — Nutrionally", description:"Evidence-based clinical nutrition articles: BMI, diabetes, glycemic index, thyroid, gout, pregnancy and more.", url:"https://nutrionally.com/blog"});}
   const [active, setActive] = useState(null);
 
   if(active) {

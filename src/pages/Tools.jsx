@@ -1,3 +1,4 @@
+import { useMeta } from "../hooks/useMeta.js";
 import { useState } from "react";
 const F = "Plus Jakarta Sans, sans-serif";
 const TEAL = "#2A9D8F";
@@ -595,6 +596,7 @@ const GROUPS = [
 
 export default function Tools({lang}) {
   const isES = lang === "ES";
+  if(isES) {useMeta({title:"Calculadoras de salud y nutrición — Nutrionally", description:"15+ calculadoras gratuitas: IMC, TDEE, macronutrientes, índice glucémico, verificador de gluten, tracker de sodio y más. Bilingüe.", url:"https://nutrionally.com/tools"});} else {useMeta({title:"Health and nutrition calculators — Nutrionally", description:"15+ free calculators: BMI, TDEE, macronutrients, glycemic index, gluten checker, sodium tracker and more. Bilingual.", url:"https://nutrionally.com/tools"});}
   const [active, setActive] = useState("bmi");
   const [units, setUnits] = useState("metric");
   useState(()=>{
