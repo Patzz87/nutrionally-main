@@ -4,8 +4,8 @@ const NAV = [
   {path:"/", es:"Inicio", en:"Home"},
   {path:"/tools", es:"Herramientas", en:"Tools"},
   {path:"/conditions", es:"Condiciones", en:"Conditions"},
-  {path:"/resources", es:"Recursos", en:"Resources"},
   {path:"/blog", es:"Blog", en:"Blog"},
+  {path:"/about", es:"Nosotros", en:"About"},
 ];
 export default function Navbar({lang, setLang}) {
   const navigate = useNavigate();

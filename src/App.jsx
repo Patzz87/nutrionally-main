@@ -7,6 +7,7 @@ import Tools from "./pages/Tools.jsx";
 import Conditions from "./pages/Conditions.jsx";
 import Resources from "./pages/Resources.jsx";
 import Blog from "./pages/Blog.jsx";
+import About from "./pages/About.jsx";
 
 export default function App() {
   const [lang, setLang] = useState("ES");
@@ -21,6 +22,7 @@ export default function App() {
           <Route path="/conditions" element={<Conditions lang={lang}/>}/>
           <Route path="/resources" element={<Resources lang={lang}/>}/>
           <Route path="/blog" element={<Blog lang={lang}/>}/>
+          <Route path="/about" element={<About lang={lang}/>}/>
         </Routes>
       </div>
       <Footer lang={lang}/>
