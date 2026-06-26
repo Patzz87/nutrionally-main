@@ -394,6 +394,84 @@ function GlutenCalc({isES}) {
   );
 }
 
+function SodiumCalc({isES}) {
+  const [foods, setFoods] = useState([]);
+  const [query, setQuery] = useState("");
+  const [goal, setGoal] = useState("2300");
+  const sodiumDB = [
+    {name:isES?"Sal de mesa (1 cdta)":"Table salt (1 tsp)", mg:2300},
+    {name:isES?"Pan blanco (1 rebanada)":"White bread (1 slice)", mg:147},
+    {name:isES?"Pan integral (1 rebanada)":"Whole wheat bread (1 slice)", mg:132},
+    {name:isES?"Sopa enlatada (1 taza)":"Canned soup (1 cup)", mg:890},
+    {name:isES?"Queso procesado (1 rebanada)":"Processed cheese (1 slice)", mg:430},
+    {name:isES?"Queso fresco (30g)":"Fresh cheese (30g)", mg:350},
+    {name:isES?"Jamón (2 rebanadas)":"Ham (2 slices)", mg:540},
+    {name:isES?"Salchicha (1 pieza)":"Sausage (1 piece)", mg:480},
+    {name:isES?"Atún enlatado (100g)":"Canned tuna (100g)", mg:354},
+    {name:isES?"Salsa de soya (1 cda)":"Soy sauce (1 tbsp)", mg:879},
+    {name:isES?"Salsa catsup (1 cda)":"Ketchup (1 tbsp)", mg:154},
+    {name:isES?"Mayonesa (1 cda)":"Mayonnaise (1 tbsp)", mg:88},
+    {name:isES?"Papas fritas (30g)":"Potato chips (30g)", mg:149},
+    {name:isES?"Pizza (1 rebanada)":"Pizza (1 slice)", mg:640},
+    {name:isES?"Hamburguesa (1 pieza)":"Hamburger (1 piece)", mg:1040},
+    {name:isES?"Pollo sin sal (100g)":"Unsalted chicken (100g)", mg:75},
+    {name:isES?"Arroz cocido sin sal (1 taza)":"Cooked rice no salt (1 cup)", mg:2},
+    {name:isES?"Manzana (1 pieza)":"Apple (1 piece)", mg:2},
+    {name:isES?"Leche (1 vaso 200mL)":"Milk (1 glass 200mL)", mg:100},
+    {name:isES?"Yogur natural (150g)":"Plain yogurt (150g)", mg:80},
+    {name:isES?"Huevo (1 pieza)":"Egg (1 piece)", mg:70},
+    {name:isES?"Frijoles enlatados (1/2 taza)":"Canned beans (1/2 cup)", mg:480},
+    {name:isES?"Frijoles cocidos sin sal (1/2 taza)":"Cooked beans no salt (1/2 cup)", mg:1},
+    {name:isES?"Refresco (355mL)":"Soda (355mL)", mg:45},
+    {name:isES?"Jugo de tomate (240mL)":"Tomato juice (240mL)", mg:620},
+  ];
+  const filtered = query.length > 1 ? sodiumDB.filter(f=>f.name.toLowerCase().includes(query.toLowerCase())).slice(0,6) : [];
+  const total = foods.reduce((sum,f)=>sum+f.mg, 0);
+  const goalMg = parseInt(goal);
+  const pct = Math.min(Math.round(total/goalMg*100), 100);
+  const barColor = pct < 70 ? "#0F6E56" : pct < 90 ? "#854F0B" : "#A32D2D";
+  return (
+    <CalcCard title={isES?"Tracker de sodio":"Sodium tracker"} desc={isES?"Monitorea tu ingesta diaria de sodio":"Monitor your daily sodium intake"}>
+      <Select label={isES?"Meta de sodio":"Sodium goal"} value={goal} onChange={setGoal} options={[{value:"1500",label:isES?"1500 mg — hipertensión severa":"1500 mg — severe hypertension"},{value:"2000",label:isES?"2000 mg — hipertensión":"2000 mg — hypertension"},{value:"2300",label:isES?"2300 mg — general (OMS)":"2300 mg — general (WHO)"}]}/>
+      <div style={{marginBottom:12}}>
+        <div style={{display:"flex",justifyContent:"space-between",marginBottom:4}}>
+          <span style={{fontSize:12,color:NAVY,fontFamily:F}}>{isES?"Consumido":"Consumed"}: <strong>{total.toLocaleString()} mg</strong></span>
+          <span style={{fontSize:12,color:barColor,fontFamily:F}}>{pct}% {isES?"de la meta":"of goal"}</span>
+        </div>
+        <div style={{background:"#F0F4FF",borderRadius:20,height:8}}>
+          <div style={{width:`${pct}%`,background:barColor,borderRadius:20,height:8,transition:"width 0.3s"}}/>
+        </div>
+        <div style={{display:"flex",justifyContent:"space-between",marginTop:2}}>
+          <span style={{fontSize:10,color:"#3A5BA0",fontFamily:F}}>0</span>
+          <span style={{fontSize:10,color:"#3A5BA0",fontFamily:F}}>{goalMg.toLocaleString()} mg</span>
+        </div>
+      </div>
+      <input value={query} onChange={e=>setQuery(e.target.value)} placeholder={isES?"Buscar alimento... ej: pan, sal, jamón":"Search food... e.g. bread, salt, ham"} style={{width:"100%",padding:"8px 12px",borderRadius:8,border:"0.5px solid #D4E3FF",fontSize:13,fontFamily:F,outline:"none",boxSizing:"border-box",marginBottom:6}}/>
+      {filtered.map(f=>(
+        <div key={f.name} onClick={()=>{setFoods(prev=>[...prev,f]);setQuery("");}} style={{padding:"8px 12px",borderBottom:"0.5px solid #F0F4FF",cursor:"pointer",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+          <span style={{fontSize:12,color:NAVY,fontFamily:F}}>{f.name}</span>
+          <span style={{fontSize:12,fontWeight:500,color:BLUE,fontFamily:F}}>{f.mg} mg</span>
+        </div>
+      ))}
+      {foods.length>0&&(
+        <div style={{marginTop:12}}>
+          <div style={{fontSize:11,fontWeight:600,color:NAVY,fontFamily:F,marginBottom:6}}>{isES?"Alimentos registrados:":"Logged foods:"}</div>
+          {foods.map((f,i)=>(
+            <div key={i} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"6px 10px",background:"#F5F7FF",borderRadius:6,marginBottom:4}}>
+              <span style={{fontSize:11,color:"#3A5BA0",fontFamily:F}}>{f.name}</span>
+              <div style={{display:"flex",gap:8,alignItems:"center"}}>
+                <span style={{fontSize:11,fontWeight:500,color:BLUE,fontFamily:F}}>{f.mg} mg</span>
+                <button onClick={()=>setFoods(prev=>prev.filter((_,j)=>j!==i))} style={{background:"none",border:"none",color:"#A32D2D",cursor:"pointer",fontSize:12,fontFamily:F}}>✕</button>
+              </div>
+            </div>
+          ))}
+          <button onClick={()=>setFoods([])} style={{marginTop:8,width:"100%",padding:"7px",borderRadius:8,background:"transparent",border:"0.5px solid #D4E3FF",color:"#3A5BA0",fontSize:12,fontFamily:F,cursor:"pointer"}}>{isES?"Limpiar todo":"Clear all"}</button>
+        </div>
+      )}
+    </CalcCard>
+  );
+}
+
 const GROUPS = [
   {id:"body", es:"Composición corporal", en:"Body composition", tools:[
     {id:"bmi", es:"IMC / BMI", en:"BMI"},
@@ -416,6 +494,7 @@ const GROUPS = [
   {id:"other", es:"Otros", en:"Other", tools:[
     {id:"water", es:"Agua", en:"Water intake"},
     {id:"hr", es:"Frecuencia cardíaca", en:"Heart rate"},
+    {id:"sodium", es:"Tracker de sodio", en:"Sodium tracker"},
   ]},
 ];
 
@@ -456,6 +535,7 @@ export default function Tools({lang}) {
         {active==="hr"&&<HeartRateCalc isES={isES}/>}
         {active==="glycemic"&&<GlycemicCalc isES={isES}/>}
         {active==="gluten"&&<GlutenCalc isES={isES}/>}
+        {active==="sodium"&&<SodiumCalc isES={isES}/>}
         {active==="carb"&&<CarbCalc isES={isES}/>}
         {active==="protein"&&<ProteinCalc isES={isES}/>}
         {active==="fat"&&<FatCalc isES={isES}/>}

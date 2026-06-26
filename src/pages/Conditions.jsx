@@ -582,7 +582,7 @@ function GlutenCheckerInline({isES}) {
 function AllergyPage({isES}) {
   const [tab,setTab]=useState("general");
   const COLOR="#92400E"; const BG="#FEF3C7";
-  const tabs=[{id:"general",es:"General",en:"General"},{id:"big9",es:"Los 9 alérgenos",en:"The Big 9"},{id:"substitutes",es:"Sustitutos",en:"Substitutes"},{id:"labels",es:"Leer etiquetas",en:"Read labels"},{id:"celiac",es:"Celiaquía",en:"Celiac disease"},{id:"lactose",es:"Lactosa",en:"Lactose"}];
+  const tabs=[{id:"general",es:"General",en:"General"},{id:"big9",es:"Los 9 alérgenos",en:"The Big 9"},{id:"substitutes",es:"Sustitutos",en:"Substitutes"},{id:"labels",es:"Leer etiquetas",en:"Read labels"},{id:"celiac",es:"Celiaquía",en:"Celiac disease"},{id:"lactose",es:"Lactosa",en:"Lactose"},{id:"glutencheck",es:"Verificador de gluten",en:"Gluten checker"}];
   return (
     <div>
       <div style={{display:"flex",gap:8,marginBottom:20,flexWrap:"wrap"}}>
