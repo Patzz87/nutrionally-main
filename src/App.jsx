@@ -52,8 +52,8 @@ function Footer({lang}) {
           </div>
         </div>
         <div style={{borderTop:"0.5px solid #3A5BA0",paddingTop:20,display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:10}}>
-          <div style={{fontSize:11,color:"#3A5BA0",fontFamily:F}}>© 2026 Nutrionally · hola@nutrionally.com</div>
-          <div style={{fontSize:11,color:"#3A5BA0",fontFamily:F}}>{isES?"Información con fines educativos — no reemplaza consejo médico profesional.":"Information for educational purposes — does not replace professional medical advice."}</div>
+          <div style={{fontSize:11,color:"#93C5FD",fontFamily:F}}>© 2026 Nutrionally · hola@nutrionally.com</div>
+          <div style={{fontSize:11,color:"#93C5FD",fontFamily:F}}>{isES?"Información con fines educativos — no reemplaza consejo médico profesional.":"Information for educational purposes — does not replace professional medical advice."}</div>
         </div>
       </div>
     </div>
