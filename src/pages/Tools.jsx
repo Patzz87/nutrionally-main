@@ -242,7 +242,7 @@ function CarbCalc({isES}) {
   );
 }
 
-function ProteinCalc({isES}) {
+function ProteinCalc({isES, units="metric"}) {
   const [weight,setWeight]=useState("");const [condition,setCondition]=useState("normal");
   const conditions=[{value:"normal",label:isES?"Persona sana (sedentaria)":"Healthy (sedentary)",min:0.8,max:1.0},{value:"active",label:isES?"Activo (ejercicio regular)":"Active (regular exercise)",min:1.2,max:1.6},{value:"athlete",label:isES?"Atleta / musculación":"Athlete / bodybuilding",min:1.6,max:2.2},{value:"obesity",label:isES?"Obesidad":"Obesity",min:1.2,max:1.5},{value:"dm2",label:isES?"Diabetes tipo 2":"Type 2 diabetes",min:1.0,max:1.2},{value:"renal",label:isES?"ERC sin diálisis":"CKD without dialysis",min:0.6,max:0.8},{value:"dialysis",label:isES?"Diálisis":"Dialysis",min:1.2,max:1.5},{value:"surgery",label:isES?"Post-cirugía / trauma":"Post-surgery / trauma",min:1.5,max:2.0},{value:"elderly",label:isES?"Adulto mayor (>65 años)":"Elderly (>65 years)",min:1.0,max:1.2}];
   const cond=conditions.find(c=>c.value===condition);
