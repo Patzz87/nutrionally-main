@@ -313,6 +313,33 @@ export default function Tools({lang}) {
         {active==="water"&&<WaterCalc isES={isES}/>}
         {active==="hr"&&<HeartRateCalc isES={isES}/>}
       </div>
+
+      <div style={{marginTop:48}}>
+        <div style={{fontSize:11,fontWeight:500,color:TEAL,textTransform:"uppercase",letterSpacing:"0.08em",marginBottom:6,fontFamily:F}}>{isES?"Herramientas clínicas especializadas":"Specialized clinical tools"}</div>
+        <div style={{fontSize:22,fontWeight:500,color:NAVY,marginBottom:6,fontFamily:F}}>{isES?"Calculadoras para profesionales de la salud":"Calculators for health professionals"}</div>
+        <div style={{fontSize:13,color:"#3A5BA0",marginBottom:24,fontFamily:F}}>{isES?"Disponibles en nutrionally learn — gratuitas, sin registro.":"Available on nutrionally learn — free, no signup."}</div>
+        <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:14}}>
+          {[
+            {icon:"🔄",es:"Calculadora de intercambios INCAP/USDA",en:"INCAP/USDA Exchange calculator",desc_es:"Plan de alimentación por intercambios con distribución por tiempo de comida.",desc_en:"Meal exchange plan with distribution by meal time.",color:"#2563EB",bg:"#EFF6FF"},
+            {icon:"📊",es:"Harris-Benedict y macronutrientes clínicos",en:"Harris-Benedict and clinical macronutrients",desc_es:"GEB, VET, proteínas, lípidos y carbohidratos con correcciones clínicas.",desc_en:"BMR, TEE, protein, fat and carbs with clinical corrections.",color:"#0F6E56",bg:"#E1F5EE"},
+            {icon:"💉",es:"Nutrición Parenteral Total (NPT)",en:"Total Parenteral Nutrition (TPN)",desc_es:"Cálculo de dextrosa, aminoácidos y lípidos con osmolaridad estimada.",desc_en:"Dextrose, amino acids and lipids with estimated osmolarity.",color:"#854F0B",bg:"#FAEEDA"},
+            {icon:"🥛",es:"Nutrición Enteral (NE)",en:"Enteral Nutrition (EN)",desc_es:"Fórmulas estándar e hipercalóricas con aporte calórico y proteico.",desc_en:"Standard and hypercaloric formulas with caloric and protein supply.",color:"#7C3AED",bg:"#F3E8FF"},
+            {icon:"📋",es:"Modo estudio — casos clínicos",en:"Study mode — clinical cases",desc_es:"Guarda y revisa casos con panel educativo de Harris-Benedict.",desc_en:"Save and review cases with Harris-Benedict educational panel.",color:"#1E2D4E",bg:"#F5F7FF"},
+            {icon:"🥗",es:"Lista de alimentos INCAP/USDA",en:"INCAP/USDA food list",desc_es:"Base de datos completa con valores por intercambio y gramos.",desc_en:"Complete database with values per exchange and grams.",color:"#3A5BA0",bg:"#EFF6FF"},
+          ].map((t,i)=>(
+            <a key={i} href="https://learn.nutrionally.com" target="_blank" rel="noopener noreferrer" style={{background:t.bg,border:`0.5px solid ${t.color}22`,borderRadius:12,padding:20,textDecoration:"none",display:"block"}}>
+              <div style={{fontSize:24,marginBottom:10}}>{t.icon}</div>
+              <div style={{fontSize:13,fontWeight:500,color:t.color,marginBottom:6,fontFamily:F}}>{isES?t.es:t.en}</div>
+              <div style={{fontSize:11,color:"#3A5BA0",lineHeight:1.5,fontFamily:F}}>{isES?t.desc_es:t.desc_en}</div>
+            </a>
+          ))}
+        </div>
+        <div style={{marginTop:20,textAlign:"center"}}>
+          <a href="https://learn.nutrionally.com" target="_blank" rel="noopener noreferrer" style={{display:"inline-block",padding:"12px 28px",borderRadius:8,background:NAVY,color:"#E2E8F0",textDecoration:"none",fontSize:13,fontWeight:500,fontFamily:F}}>
+            {isES?"Abrir nutrionally learn →":"Open nutrionally learn →"}
+          </a>
+        </div>
+      </div>
     </div>
   );
 }
