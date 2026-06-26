@@ -101,7 +101,7 @@ export default function Home({lang}) {
             {title: isES?"Calculadora de intercambios":"Exchange calculator", desc: isES?"Plan de intercambios INCAP/USDA con distribución por tiempo.":"INCAP/USDA exchange plan with meal time distribution.", url:"https://learn.nutrionally.com/#s1"},
             {title: isES?"Tracker de sodio":"Sodium tracker", desc: isES?"Monitorea ingesta de sodio para manejo de hipertensión.":"Monitor sodium intake for hypertension management.", url:"/tools"},
           ].map(t=>(
-            <div key={t.title} onClick={()=>{if(t.url.startsWith("http")){window.open(t.url,"_blank");}else{const[path,hash]=t.url.split("#");navigate(path);if(hash)setTimeout(()=>{const el=document.getElementById(hash);if(el)el.scrollIntoView();},100);}}} style={{background:"#F5F7FF", border:"0.5px solid #D4E3FF", borderRadius:12, padding:"18px 16px", cursor:"pointer"}}>
+            <div key={t.title} onClick={()=>{if(t.url.startsWith("http")){window.open(t.url,"_blank");}else{window.location.href=t.url;}}} style={{background:"#F5F7FF", border:"0.5px solid #D4E3FF", borderRadius:12, padding:"18px 16px", cursor:"pointer"}}>
               <div style={{width:8, height:8, borderRadius:"50%", background:TEAL, marginBottom:10}}/>
               <div style={{fontSize:13, fontWeight:500, color:NAVY, marginBottom:4, fontFamily:F}}>{t.title}</div>
               <div style={{fontSize:11, color:"#3A5BA0", lineHeight:1.5, fontFamily:F}}>{t.desc}</div>

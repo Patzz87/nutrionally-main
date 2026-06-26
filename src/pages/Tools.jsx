@@ -422,6 +422,11 @@ const GROUPS = [
 export default function Tools({lang}) {
   const isES = lang === "ES";
   const [active, setActive] = useState("bmi");
+  useState(()=>{
+    const hash = window.location.hash.replace("#","");
+    const allTools = ["bmi","bodyfat","ideal","tdee","macro","carb","protein","fat","water","hr","glycemic","gluten"];
+    if(allTools.includes(hash)) setActive(hash);
+  });
   return (
     <div style={{padding:"40px 32px", maxWidth:960, margin:"0 auto"}}>
       <div style={{fontSize:11,fontWeight:500,color:TEAL,textTransform:"uppercase",letterSpacing:"0.08em",marginBottom:6,fontFamily:F}}>{isES?"Herramientas":"Tools"}</div>
