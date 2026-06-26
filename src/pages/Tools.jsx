@@ -212,6 +212,113 @@ function FatCalc({isES}) {
   );
 }
 
+function GlycemicCalc({isES}) {
+  const [query, setQuery] = useState("");
+  const [result, setResult] = useState(null);
+  const foods = [
+    {name:"Arroz blanco / White rice", gi:72, cat:"Cereales / Grains"},
+    {name:"Arroz integral / Brown rice", gi:50, cat:"Cereales / Grains"},
+    {name:"Arroz jazmín / Jasmine rice", gi:89, cat:"Cereales / Grains"},
+    {name:"Pan blanco / White bread", gi:75, cat:"Panes / Breads"},
+    {name:"Pan integral / Whole wheat bread", gi:51, cat:"Panes / Breads"},
+    {name:"Pan de centeno / Rye bread", gi:41, cat:"Panes / Breads"},
+    {name:"Tortilla de maíz / Corn tortilla", gi:52, cat:"Panes / Breads"},
+    {name:"Avena / Oats", gi:55, cat:"Cereales / Grains"},
+    {name:"Granola", gi:62, cat:"Cereales / Grains"},
+    {name:"Cornflakes / Corn flakes", gi:81, cat:"Cereales / Grains"},
+    {name:"Quinoa", gi:53, cat:"Cereales / Grains"},
+    {name:"Cebada / Barley", gi:28, cat:"Cereales / Grains"},
+    {name:"Papa / Potato (hervida)", gi:78, cat:"Tubérculos / Tubers"},
+    {name:"Papa / Potato (horneada)", gi:85, cat:"Tubérculos / Tubers"},
+    {name:"Papa / Potato (frita)", gi:75, cat:"Tubérculos / Tubers"},
+    {name:"Camote / Sweet potato", gi:63, cat:"Tubérculos / Tubers"},
+    {name:"Yuca / Cassava", gi:46, cat:"Tubérculos / Tubers"},
+    {name:"Plátano verde / Green plantain", gi:40, cat:"Tubérculos / Tubers"},
+    {name:"Plátano maduro / Ripe plantain", gi:55, cat:"Tubérculos / Tubers"},
+    {name:"Manzana / Apple", gi:36, cat:"Frutas / Fruits"},
+    {name:"Plátano / Banana", gi:51, cat:"Frutas / Fruits"},
+    {name:"Naranja / Orange", gi:43, cat:"Frutas / Fruits"},
+    {name:"Uvas / Grapes", gi:59, cat:"Frutas / Fruits"},
+    {name:"Sandía / Watermelon", gi:76, cat:"Frutas / Fruits"},
+    {name:"Mango", gi:60, cat:"Frutas / Fruits"},
+    {name:"Piña / Pineapple", gi:66, cat:"Frutas / Fruits"},
+    {name:"Papaya", gi:59, cat:"Frutas / Fruits"},
+    {name:"Fresa / Strawberry", gi:40, cat:"Frutas / Fruits"},
+    {name:"Pera / Pear", gi:38, cat:"Frutas / Fruits"},
+    {name:"Melón / Cantaloupe", gi:65, cat:"Frutas / Fruits"},
+    {name:"Durazno / Peach", gi:42, cat:"Frutas / Fruits"},
+    {name:"Zanahoria / Carrot", gi:39, cat:"Verduras / Vegetables"},
+    {name:"Maíz / Corn", gi:52, cat:"Verduras / Vegetables"},
+    {name:"Chícharo / Green peas", gi:51, cat:"Verduras / Vegetables"},
+    {name:"Remolacha / Beet", gi:64, cat:"Verduras / Vegetables"},
+    {name:"Lentejas / Lentils", gi:32, cat:"Leguminosas / Legumes"},
+    {name:"Frijoles negros / Black beans", gi:30, cat:"Leguminosas / Legumes"},
+    {name:"Frijoles rojos / Red beans", gi:29, cat:"Leguminosas / Legumes"},
+    {name:"Garbanzos / Chickpeas", gi:28, cat:"Leguminosas / Legumes"},
+    {name:"Soya / Soybeans", gi:15, cat:"Leguminosas / Legumes"},
+    {name:"Leche entera / Whole milk", gi:31, cat:"Lácteos / Dairy"},
+    {name:"Leche descremada / Skim milk", gi:32, cat:"Lácteos / Dairy"},
+    {name:"Yogur natural / Plain yogurt", gi:41, cat:"Lácteos / Dairy"},
+    {name:"Yogur con fruta / Fruit yogurt", gi:41, cat:"Lácteos / Dairy"},
+    {name:"Helado / Ice cream", gi:57, cat:"Lácteos / Dairy"},
+    {name:"Espagueti / Spaghetti (al dente)", gi:49, cat:"Pastas / Pasta"},
+    {name:"Espagueti / Spaghetti (bien cocido)", gi:58, cat:"Pastas / Pasta"},
+    {name:"Macarrones / Macaroni", gi:47, cat:"Pastas / Pasta"},
+    {name:"Fideos de arroz / Rice noodles", gi:61, cat:"Pastas / Pasta"},
+    {name:"Azúcar / Sugar (sacarosa)", gi:65, cat:"Azúcares / Sugars"},
+    {name:"Miel / Honey", gi:61, cat:"Azúcares / Sugars"},
+    {name:"Fructosa / Fructose", gi:19, cat:"Azúcares / Sugars"},
+    {name:"Glucosa / Glucose", gi:100, cat:"Azúcares / Sugars"},
+    {name:"Bebida deportiva / Sports drink", gi:78, cat:"Azúcares / Sugars"},
+    {name:"Refresco / Soda", gi:63, cat:"Azúcares / Sugars"},
+    {name:"Jugo de naranja / Orange juice", gi:50, cat:"Azúcares / Sugars"},
+    {name:"Cacahuate / Peanuts", gi:14, cat:"Nueces / Nuts"},
+    {name:"Nuez / Walnuts", gi:15, cat:"Nueces / Nuts"},
+    {name:"Almendras / Almonds", gi:0, cat:"Nueces / Nuts"},
+    {name:"Chocolate oscuro / Dark chocolate", gi:23, cat:"Otros / Other"},
+    {name:"Palomitas / Popcorn", gi:65, cat:"Otros / Other"},
+    {name:"Galletas / Crackers", gi:74, cat:"Otros / Other"},
+    {name:"Donas / Donuts", gi:76, cat:"Otros / Other"},
+    {name:"Bizcocho / Cake", gi:38, cat:"Otros / Other"},
+  ];
+  const giColor = gi => gi < 55 ? "#0F6E56" : gi < 70 ? "#854F0B" : "#A32D2D";
+  const giBg = gi => gi < 55 ? "#E1F5EE" : gi < 70 ? "#FAEEDA" : "#FCEBEB";
+  const giLabel = gi => gi < 55 ? (isES?"Bajo":"Low") : gi < 70 ? (isES?"Medio":"Medium") : (isES?"Alto":"High");
+  const filtered = query.length > 1 ? foods.filter(f=>f.name.toLowerCase().includes(query.toLowerCase())).slice(0,8) : [];
+  return (
+    <CalcCard title={isES?"Índice glucémico":"Glycemic Index"} desc={isES?"Base de datos de 60+ alimentos con IG y categoría":"Database of 60+ foods with GI and category"}>
+      <input value={query} onChange={e=>{setQuery(e.target.value);setResult(null);}} placeholder={isES?"Buscar alimento... ej: arroz, manzana":"Search food... e.g. rice, apple"} style={{width:"100%",padding:"9px 12px",borderRadius:8,border:"0.5px solid #D4E3FF",fontSize:13,fontFamily:F,outline:"none",boxSizing:"border-box",marginBottom:8}}/>
+      {filtered.map(f=>(
+        <div key={f.name} onClick={()=>{setResult(f);setQuery(f.name);}} style={{padding:"8px 12px",borderBottom:"0.5px solid #F0F4FF",cursor:"pointer",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+          <div>
+            <div style={{fontSize:12,color:NAVY,fontFamily:F}}>{f.name}</div>
+            <div style={{fontSize:10,color:"#3A5BA0",fontFamily:F}}>{f.cat}</div>
+          </div>
+          <span style={{fontSize:12,fontWeight:500,padding:"2px 8px",borderRadius:10,background:giBg(f.gi),color:giColor(f.gi),fontFamily:F,whiteSpace:"nowrap"}}>IG {f.gi}</span>
+        </div>
+      ))}
+      {result&&query===result.name&&(
+        <div style={{marginTop:12,padding:14,background:"#F5F7FF",borderRadius:8}}>
+          <div style={{fontSize:11,color:"#3A5BA0",fontFamily:F,marginBottom:8}}>{result.name} — {result.cat}</div>
+          <div style={{display:"flex",gap:8}}>
+            <div style={{flex:1,background:giBg(result.gi),borderRadius:8,padding:"10px 14px",textAlign:"center"}}>
+              <div style={{fontSize:10,color:giColor(result.gi),fontFamily:F,marginBottom:2}}>IG</div>
+              <div style={{fontSize:24,fontWeight:500,color:giColor(result.gi),fontFamily:F}}>{result.gi}</div>
+            </div>
+            <div style={{flex:1,background:"#EFF6FF",borderRadius:8,padding:"10px 14px",textAlign:"center"}}>
+              <div style={{fontSize:10,color:BLUE,fontFamily:F,marginBottom:2}}>{isES?"Categoría":"Category"}</div>
+              <div style={{fontSize:14,fontWeight:500,color:BLUE,fontFamily:F}}>{giLabel(result.gi)}</div>
+            </div>
+          </div>
+          <div style={{fontSize:10,color:"#3A5BA0",fontFamily:F,marginTop:8,padding:"6px 8px",background:"#fff",borderRadius:6}}>
+            {isES?"Bajo: <55 | Medio: 55-69 | Alto: ≥70":"Low: <55 | Medium: 55-69 | High: ≥70"}
+          </div>
+        </div>
+      )}
+    </CalcCard>
+  );
+}
+
 const GROUPS = [
   {id:"body", es:"Composición corporal", en:"Body composition", tools:[
     {id:"bmi", es:"IMC / BMI", en:"BMI"},
@@ -226,6 +333,9 @@ const GROUPS = [
     {id:"carb", es:"Carbohidratos", en:"Carbohydrates"},
     {id:"protein", es:"Proteínas", en:"Protein"},
     {id:"fat", es:"Grasas", en:"Fat intake"},
+  ]},
+  {id:"nutrition", es:"Nutrición", en:"Nutrition", tools:[
+    {id:"glycemic", es:"Índice glucémico", en:"Glycemic index"},
   ]},
   {id:"other", es:"Otros", en:"Other", tools:[
     {id:"water", es:"Agua", en:"Water intake"},
@@ -255,7 +365,7 @@ export default function Tools({lang}) {
           </div>
         ))}
       </div>
-      <div style={{maxWidth:560}}>
+      <div style={{maxWidth:720}}>
         {active==="bmi"&&<BMICalc isES={isES}/>}
         {active==="tdee"&&<TDEECalc isES={isES}/>}
         {active==="macro"&&<MacroCalc isES={isES}/>}
@@ -263,6 +373,7 @@ export default function Tools({lang}) {
         {active==="bodyfat"&&<BodyFatCalc isES={isES}/>}
         {active==="water"&&<WaterCalc isES={isES}/>}
         {active==="hr"&&<HeartRateCalc isES={isES}/>}
+        {active==="glycemic"&&<GlycemicCalc isES={isES}/>}
         {active==="carb"&&<CarbCalc isES={isES}/>}
         {active==="protein"&&<ProteinCalc isES={isES}/>}
         {active==="fat"&&<FatCalc isES={isES}/>}
