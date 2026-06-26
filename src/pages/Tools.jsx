@@ -566,16 +566,141 @@ function FiberCalc({isES}) {
   );
 }
 
+function ICCCalc({isES}) {
+  const [waist, setWaist] = useState("");
+  const [hip, setHip] = useState("");
+  const [sex, setSex] = useState("F");
+  let icc=null, risk="", color=TEAL, bg="#E1F5EE";
+  if(waist&&hip){
+    icc = +(parseFloat(waist)/parseFloat(hip)).toFixed(2);
+    if(sex==="F"){
+      if(icc<0.8){risk=isES?"Bajo riesgo":"Low risk";color="#0F6E56";bg="#E1F5EE";}
+      else if(icc<=0.85){risk=isES?"Riesgo moderado":"Moderate risk";color="#854F0B";bg="#FAEEDA";}
+      else{risk=isES?"Riesgo alto":"High risk";color="#A32D2D";bg="#FCEBEB";}
+    } else {
+      if(icc<0.95){risk=isES?"Bajo riesgo":"Low risk";color="#0F6E56";bg="#E1F5EE";}
+      else if(icc<=1.0){risk=isES?"Riesgo moderado":"Moderate risk";color="#854F0B";bg="#FAEEDA";}
+      else{risk=isES?"Riesgo alto":"High risk";color="#A32D2D";bg="#FCEBEB";}
+    }
+  }
+  return (
+    <CalcCard title={isES?"Índice cintura-cadera (ICC)":"Waist-to-hip ratio (WHR)"} desc={isES?"Indicador de distribución de grasa y riesgo cardiovascular":"Indicator of fat distribution and cardiovascular risk"}>
+      <div style={{display:"flex",gap:8,marginBottom:10}}>
+        {["F","M"].map(s=>(<button key={s} onClick={()=>setSex(s)} style={{padding:"6px 14px",borderRadius:20,border:"0.5px solid #D4E3FF",background:sex===s?BLUE:"transparent",color:sex===s?"#fff":NAVY,fontSize:12,fontFamily:F,cursor:"pointer"}}>{s==="F"?(isES?"Femenino":"Female"):(isES?"Masculino":"Male")}</button>))}
+      </div>
+      <Input label={isES?"Cintura (cm)":"Waist (cm)"} value={waist} onChange={setWaist} unit="cm"/>
+      <Input label={isES?"Cadera (cm)":"Hip (cm)"} value={hip} onChange={setHip} unit="cm"/>
+      {icc&&(<div style={{marginTop:12,display:"flex",flexDirection:"column",gap:8}}>
+        <Result label="ICC / WHR" value={icc} unit=""/>
+        <Result label={isES?"Riesgo cardiovascular":"Cardiovascular risk"} value={risk} unit="" color={color} bg={bg}/>
+        <div style={{fontSize:11,color:"#3A5BA0",fontFamily:F,padding:"6px 10px",background:"#F5F7FF",borderRadius:6}}>
+          {isES?"Mujer: <0.80 bajo | 0.80-0.85 moderado | >0.85 alto":"Women: <0.80 low | 0.80-0.85 moderate | >0.85 high"}<br/>
+          {isES?"Hombre: <0.95 bajo | 0.95-1.0 moderado | >1.0 alto":"Men: <0.95 low | 0.95-1.0 moderate | >1.0 high"}
+        </div>
+      </div>)}
+    </CalcCard>
+  );
+}
+
+function ICACalc({isES}) {
+  const [waist, setWaist] = useState("");
+  const [height, setHeight] = useState("");
+  let ica=null, risk="", color=TEAL, bg="#E1F5EE";
+  if(waist&&height){
+    ica = +(parseFloat(waist)/parseFloat(height)).toFixed(2);
+    if(ica<0.4){risk=isES?"Bajo peso":"Underweight";color="#2563EB";bg="#EFF6FF";}
+    else if(ica<=0.5){risk=isES?"Saludable":"Healthy";color="#0F6E56";bg="#E1F5EE";}
+    else if(ica<=0.6){risk=isES?"Sobrepeso / Riesgo aumentado":"Overweight / Increased risk";color="#854F0B";bg="#FAEEDA";}
+    else{risk=isES?"Obesidad / Riesgo alto":"Obesity / High risk";color="#A32D2D";bg="#FCEBEB";}
+  }
+  return (
+    <CalcCard title={isES?"Índice cintura-talla (ICA)":"Waist-to-height ratio (WHtR)"} desc={isES?"Mejor predictor de riesgo cardiometabólico que el IMC":"Better cardiometabolic risk predictor than BMI"}>
+      <Input label={isES?"Cintura (cm)":"Waist (cm)"} value={waist} onChange={setWaist} unit="cm"/>
+      <Input label={isES?"Talla (cm)":"Height (cm)"} value={height} onChange={setHeight} unit="cm"/>
+      {ica&&(<div style={{marginTop:12,display:"flex",flexDirection:"column",gap:8}}>
+        <Result label="ICA / WHtR" value={ica} unit=""/>
+        <Result label={isES?"Clasificación":"Classification"} value={risk} unit="" color={color} bg={bg}/>
+        <div style={{fontSize:11,color:"#3A5BA0",fontFamily:F,padding:"6px 10px",background:"#F5F7FF",borderRadius:6}}>
+          {isES?"Regla práctica: la cintura debe ser menos de la mitad de tu talla. ICA < 0.5 = saludable.":"Practical rule: waist should be less than half your height. WHtR < 0.5 = healthy."}
+        </div>
+      </div>)}
+    </CalcCard>
+  );
+}
+
+function AdjWeightCalc({isES}) {
+  const [weight, setWeight] = useState("");
+  const [height, setHeight] = useState("");
+  const [sex, setSex] = useState("F");
+  let ideal=null, adjusted=null;
+  if(weight&&height){
+    const h=parseFloat(height);const w=parseFloat(weight);
+    const inches=h/2.54;const over=Math.max(0,inches-60);
+    ideal=sex==="F"?+(45.5+2.3*over).toFixed(1):+(50+2.3*over).toFixed(1);
+    if(w>ideal) adjusted=+(ideal+0.25*(w-ideal)).toFixed(1);
+  }
+  return (
+    <CalcCard title={isES?"Peso ajustado":"Adjusted weight"} desc={isES?"Para cálculos clínicos en pacientes con obesidad (IMC > 27)":"For clinical calculations in obese patients (BMI > 27)"}>
+      <div style={{display:"flex",gap:8,marginBottom:10}}>
+        {["F","M"].map(s=>(<button key={s} onClick={()=>setSex(s)} style={{padding:"6px 14px",borderRadius:20,border:"0.5px solid #D4E3FF",background:sex===s?BLUE:"transparent",color:sex===s?"#fff":NAVY,fontSize:12,fontFamily:F,cursor:"pointer"}}>{s==="F"?(isES?"Femenino":"Female"):(isES?"Masculino":"Male")}</button>))}
+      </div>
+      <Input label={isES?"Peso actual (kg)":"Current weight (kg)"} value={weight} onChange={setWeight} unit="kg"/>
+      <Input label={isES?"Talla (cm)":"Height (cm)"} value={height} onChange={setHeight} unit="cm"/>
+      {ideal&&(<div style={{marginTop:12,display:"flex",flexDirection:"column",gap:8}}>
+        <Result label={isES?"Peso ideal (Devine)":"Ideal weight (Devine)"} value={ideal} unit="kg"/>
+        {adjusted
+          ?<><Result label={isES?"Peso ajustado":"Adjusted weight"} value={adjusted} unit="kg" color="#0F6E56" bg="#E1F5EE"/>
+          <div style={{fontSize:11,color:"#3A5BA0",fontFamily:F,padding:"6px 10px",background:"#F5F7FF",borderRadius:6}}>{isES?"Fórmula: Peso ideal + 0.25 × (Peso real − Peso ideal). Usar para Harris-Benedict y requerimientos proteicos en obesidad.":"Formula: Ideal weight + 0.25 × (Actual weight − Ideal weight). Use for Harris-Benedict and protein requirements in obesity."}</div></>
+          :<div style={{fontSize:11,color:"#0F6E56",fontFamily:F,padding:"6px 10px",background:"#E1F5EE",borderRadius:6}}>{isES?"El peso actual está dentro del rango de peso ideal — usar peso real para cálculos.":"Current weight is within ideal weight range — use actual weight for calculations."}</div>
+        }
+      </div>)}
+    </CalcCard>
+  );
+}
+
+function DeficitCalc({isES}) {
+  const [tdee, setTdee] = useState("");
+  const [goal, setGoal] = useState("moderate");
+  const goals = [
+    {value:"conservative", label:isES?"Conservador (−250 kcal)":"Conservative (−250 kcal)", deficit:250, loss:0.25},
+    {value:"moderate", label:isES?"Moderado (−500 kcal)":"Moderate (−500 kcal)", deficit:500, loss:0.5},
+    {value:"aggressive", label:isES?"Agresivo (−750 kcal)":"Aggressive (−750 kcal)", deficit:750, loss:0.75},
+  ];
+  const g = goals.find(x=>x.value===goal);
+  const t = parseFloat(tdee);
+  const target = t>0 ? Math.round(t - g.deficit) : null;
+  const weeks = t>0 ? Math.round(5/g.loss) : null;
+  return (
+    <CalcCard title={isES?"Calculadora de déficit calórico":"Caloric deficit calculator"} desc={isES?"Calorías objetivo para perder peso de forma saludable":"Target calories for healthy weight loss"}>
+      <Input label={isES?"TDEE — Gasto calórico total (kcal/día)":"TDEE — Total daily energy expenditure (kcal/day)"} value={tdee} onChange={setTdee} unit="kcal"/>
+      <Select label={isES?"Ritmo de pérdida de peso":"Weight loss rate"} value={goal} onChange={setGoal} options={goals.map(g=>({value:g.value,label:g.label}))}/>
+      {target&&(<div style={{marginTop:12,display:"flex",flexDirection:"column",gap:8}}>
+        <Result label={isES?"Calorías objetivo/día":"Target calories/day"} value={target.toLocaleString()} unit="kcal"/>
+        <Result label={isES?"Déficit diario":"Daily deficit"} value={g.deficit} unit="kcal/día" color="#854F0B" bg="#FAEEDA"/>
+        <Result label={isES?"Pérdida estimada/semana":"Estimated loss/week"} value={g.loss} unit="kg/semana" color="#0F6E56" bg="#E1F5EE"/>
+        <Result label={isES?"Tiempo estimado para perder 5 kg":"Estimated time to lose 5 kg"} value={weeks} unit={isES?"semanas":"weeks"} color="#2563EB" bg="#EFF6FF"/>
+        <div style={{fontSize:11,color:"#3A5BA0",fontFamily:F,padding:"6px 10px",background:"#F5F7FF",borderRadius:6}}>
+          {isES?"Mínimo recomendado: 1200 kcal/día mujeres | 1500 kcal/día hombres. 1 kg grasa ≈ 7700 kcal.":"Minimum recommended: 1200 kcal/day women | 1500 kcal/day men. 1 kg fat ≈ 7700 kcal."}
+        </div>
+      </div>)}
+    </CalcCard>
+  );
+}
+
 const GROUPS = [
   {id:"body", es:"Composición corporal", en:"Body composition", tools:[
     {id:"bmi", es:"IMC / BMI", en:"BMI"},
     {id:"bodyfat", es:"% Grasa corporal", en:"Body fat %"},
     {id:"ideal", es:"Peso ideal", en:"Ideal weight"},
+    {id:"adjweight", es:"Peso ajustado", en:"Adjusted weight"},
+    {id:"icc", es:"Índice cintura-cadera", en:"Waist-hip ratio"},
+    {id:"ica", es:"Índice cintura-talla", en:"Waist-height ratio"},
   ]},
   {id:"energy1", es:"Energía", en:"Energy", tools:[
     {id:"tdee", es:"TDEE / GCT", en:"TDEE"},
     {id:"macro", es:"Macronutrientes", en:"Macros"},
     {id:"exercise", es:"Calorías por ejercicio", en:"Calories by exercise"},
+    {id:"deficit", es:"Déficit calórico", en:"Caloric deficit"},
   ]},
   {id:"energy2", es:"Macros individuales", en:"Individual macros", tools:[
     {id:"carb", es:"Carbohidratos", en:"Carbohydrates"},
@@ -646,6 +771,10 @@ export default function Tools({lang}) {
         {active==="sodium"&&<SodiumCalc isES={isES}/>}
         {active==="exercise"&&<ExerciseCalc isES={isES} units={units}/>}
         {active==="fiber"&&<FiberCalc isES={isES}/>}
+        {active==="icc"&&<ICCCalc isES={isES}/>}
+        {active==="ica"&&<ICACalc isES={isES}/>}
+        {active==="adjweight"&&<AdjWeightCalc isES={isES}/>}
+        {active==="deficit"&&<DeficitCalc isES={isES}/>}
         {active==="carb"&&<CarbCalc isES={isES}/>}
         {active==="protein"&&<ProteinCalc isES={isES}/>}
         {active==="fat"&&<FatCalc isES={isES}/>}
