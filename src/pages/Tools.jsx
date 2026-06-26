@@ -48,10 +48,10 @@ function Select({label, value, onChange, options}) {
   );
 }
 
-function BMICalc({isES}) {
+function BMICalc({isES, units="metric"}) {
   const [weight, setWeight] = useState("");
   const [height, setHeight] = useState("");
-  const [unit, setUnit] = useState("metric");
+  const unit = units;
   let bmi=null, category="", color=TEAL, bg="#E1F5EE";
   if(weight&&height){
     const w=parseFloat(weight),h=parseFloat(height);
@@ -63,31 +63,24 @@ function BMICalc({isES}) {
   }
   return (
     <CalcCard title={isES?"Calculadora de IMC":"BMI Calculator"} desc={isES?"Índice de masa corporal":"Body mass index"}>
-      <div style={{display:"flex",gap:8,marginBottom:12}}>
-        {["metric","imperial"].map(u=>(
-          <button key={u} onClick={()=>setUnit(u)} style={{padding:"6px 14px",borderRadius:20,border:"0.5px solid #D4E3FF",background:unit===u?BLUE:"transparent",color:unit===u?"#fff":NAVY,fontSize:12,fontFamily:F,cursor:"pointer"}}>
-            {u==="metric"?"Métrico / Metric":"Imperial"}
-          </button>
-        ))}
-      </div>
       <Input label={isES?"Peso":"Weight"} value={weight} onChange={setWeight} unit={unit==="metric"?"kg":"lb"} />
-      <Input label={isES?"Talla":"Height"} value={height} onChange={setHeight} unit={unit==="metric"?"cm":"in"} />
+      <Input label={isES?"Talla":"Height"} value={height} onChange={setHeight} unit={unit==="metric"?(isES?"cm":"cm"):"in"} />
       {bmi&&<Result label="IMC / BMI" value={bmi} unit="" color={color} bg={bg}/>}
       {bmi&&<Result label={isES?"Categoría":"Category"} value={category} unit="" color={color} bg={bg}/>}
     </CalcCard>
   );
 }
 
-function TDEECalc({isES}) {
+function TDEECalc({isES, units="metric"}) {
   const [weight,setWeight]=useState("");const [height,setHeight]=useState("");const [age,setAge]=useState("");const [sex,setSex]=useState("F");const [activity,setActivity]=useState("1.2");
   let tdee=null,bmr=null;
-  if(weight&&height&&age){const w=parseFloat(weight),h=parseFloat(height),a=parseInt(age);bmr=sex==="F"?Math.round(655+9.6*w+1.9*h-4.7*a):Math.round(66+13.8*w+5*h-6.8*a);tdee=Math.round(bmr*parseFloat(activity));}
+  if(weight&&height&&age){let w=parseFloat(weight),h=parseFloat(height);if(units==="imperial"){w=w*0.453592;h=h*2.54;}const a=parseInt(age);bmr=sex==="F"?Math.round(655+9.6*w+1.9*h-4.7*a):Math.round(66+13.8*w+5*h-6.8*a);tdee=Math.round(bmr*parseFloat(activity));}
   const actOpts=[{value:"1.2",label:isES?"Sedentario":"Sedentary"},{value:"1.375",label:isES?"Ligero (1-3 días)":"Light (1-3 days)"},{value:"1.55",label:isES?"Moderado (3-5 días)":"Moderate (3-5 days)"},{value:"1.725",label:isES?"Activo (6-7 días)":"Active (6-7 days)"},{value:"1.9",label:isES?"Muy activo":"Very active"}];
   return (
     <CalcCard title={isES?"Calculadora TDEE / GCT":"TDEE Calculator"} desc="Harris-Benedict">
       <div style={{display:"flex",gap:8,marginBottom:12}}>{["F","M"].map(s=>(<button key={s} onClick={()=>setSex(s)} style={{padding:"6px 14px",borderRadius:20,border:"0.5px solid #D4E3FF",background:sex===s?BLUE:"transparent",color:sex===s?"#fff":NAVY,fontSize:12,fontFamily:F,cursor:"pointer"}}>{s==="F"?(isES?"Femenino":"Female"):(isES?"Masculino":"Male")}</button>))}</div>
-      <Input label={isES?"Peso (kg)":"Weight (kg)"} value={weight} onChange={setWeight} unit="kg"/>
-      <Input label={isES?"Talla (cm)":"Height (cm)"} value={height} onChange={setHeight} unit="cm"/>
+      <Input label={isES?"Peso":"Weight"} value={weight} onChange={setWeight} unit={units==="metric"?"kg":"lb"}/>
+      <Input label={isES?"Talla":"Height"} value={height} onChange={setHeight} unit={units==="metric"?"cm":"in"}/>
       <Input label={isES?"Edad":"Age"} value={age} onChange={setAge} unit={isES?"años":"yrs"}/>
       <Select label={isES?"Actividad":"Activity"} value={activity} onChange={setActivity} options={actOpts}/>
       {bmr&&<Result label={isES?"GEB (metabolismo basal)":"BMR"} value={bmr.toLocaleString()} unit="kcal/día"/>}
@@ -109,20 +102,20 @@ function MacroCalc({isES}) {
   );
 }
 
-function IdealWeightCalc({isES}) {
+function IdealWeightCalc({isES, units="metric"}) {
   const [height,setHeight]=useState("");const [sex,setSex]=useState("F");
   let hamwi=null,devine=null,robinson=null;
-  if(height){const h=parseFloat(height);const inches=h/2.54;const over=Math.max(0,inches-60);if(sex==="F"){hamwi=+(45.5+2.2*over).toFixed(1);devine=+(45.5+2.3*over).toFixed(1);robinson=+(49+1.7*over).toFixed(1);}else{hamwi=+(48+2.7*over).toFixed(1);devine=+(50+2.3*over).toFixed(1);robinson=+(52+1.9*over).toFixed(1);}}
+  if(height){const h=parseFloat(height);const inches=units==="metric"?h/2.54:h;const over=Math.max(0,inches-60);if(sex==="F"){hamwi=+(45.5+2.2*over).toFixed(1);devine=+(45.5+2.3*over).toFixed(1);robinson=+(49+1.7*over).toFixed(1);}else{hamwi=+(48+2.7*over).toFixed(1);devine=+(50+2.3*over).toFixed(1);robinson=+(52+1.9*over).toFixed(1);}}
   return (
     <CalcCard title={isES?"Peso ideal":"Ideal Weight"} desc={isES?"Fórmulas de Hamwi, Devine y Robinson":"Hamwi, Devine and Robinson formulas"}>
       <div style={{display:"flex",gap:8,marginBottom:12}}>{["F","M"].map(s=>(<button key={s} onClick={()=>setSex(s)} style={{padding:"6px 14px",borderRadius:20,border:"0.5px solid #D4E3FF",background:sex===s?BLUE:"transparent",color:sex===s?"#fff":NAVY,fontSize:12,fontFamily:F,cursor:"pointer"}}>{s==="F"?(isES?"Femenino":"Female"):(isES?"Masculino":"Male")}</button>))}</div>
-      <Input label={isES?"Talla (cm)":"Height (cm)"} value={height} onChange={setHeight} unit="cm"/>
+      <Input label={isES?"Talla":"Height"} value={height} onChange={setHeight} unit={units==="metric"?"cm":"in"}/>
       {hamwi&&<><Result label="Hamwi" value={hamwi} unit="kg"/><Result label="Devine" value={devine} unit="kg" color="#0F6E56" bg="#E1F5EE"/><Result label="Robinson" value={robinson} unit="kg" color="#854F0B" bg="#FAEEDA"/></>}
     </CalcCard>
   );
 }
 
-function BodyFatCalc({isES}) {
+function BodyFatCalc({isES, units="metric"}) {
   const [neck,setNeck]=useState("");const [waist,setWaist]=useState("");const [hip,setHip]=useState("");const [height,setHeight]=useState("");const [sex,setSex]=useState("F");
   let bf=null,category="",color=TEAL,bg="#E1F5EE";
   if(neck&&waist&&height&&(sex==="M"||hip)){const n=parseFloat(neck),w=parseFloat(waist),h=parseFloat(height);if(sex==="M")bf=+(495/(1.0324-0.19077*Math.log10(w-n)+0.15456*Math.log10(h))-450).toFixed(1);else{const hp=parseFloat(hip);bf=+(495/(1.29579-0.35004*Math.log10(w+hp-n)+0.22100*Math.log10(h))-450).toFixed(1);}if(sex==="F"){if(bf<21)category=isES?"Atleta":"Athlete";else if(bf<33)category=isES?"Saludable":"Healthy";else if(bf<39)category=isES?"Sobrepeso":"Overweight";else category=isES?"Obesidad":"Obese";}else{if(bf<6)category=isES?"Atleta":"Athlete";else if(bf<25)category=isES?"Saludable":"Healthy";else if(bf<31)category=isES?"Sobrepeso":"Overweight";else category=isES?"Obesidad":"Obese";}if(category===(isES?"Saludable":"Healthy")){color="#0F6E56";bg="#E1F5EE";}else if(category===(isES?"Atleta":"Athlete")){color="#2563EB";bg="#EFF6FF";}else if(category===(isES?"Sobrepeso":"Overweight")){color="#854F0B";bg="#FAEEDA";}else{color="#A32D2D";bg="#FCEBEB";}}
@@ -138,13 +131,13 @@ function BodyFatCalc({isES}) {
   );
 }
 
-function WaterCalc({isES}) {
+function WaterCalc({isES, units="metric"}) {
   const [weight,setWeight]=useState("");const [activity,setActivity]=useState("moderate");
   let water=null;
-  if(weight){const w=parseFloat(weight);const extra=activity==="low"?0:activity==="moderate"?500:1000;water=+((w*35+extra)/1000).toFixed(1);}
+  if(weight){let w=parseFloat(weight);if(units==="imperial")w=w*0.453592;const extra=activity==="low"?0:activity==="moderate"?500:1000;water=+((w*35+extra)/1000).toFixed(1);}
   return (
     <CalcCard title={isES?"Calculadora de agua":"Water Intake Calculator"} desc={isES?"Ingesta diaria recomendada":"Recommended daily intake"}>
-      <Input label={isES?"Peso (kg)":"Weight (kg)"} value={weight} onChange={setWeight} unit="kg"/>
+      <Input label={isES?"Peso":"Weight"} value={weight} onChange={setWeight} unit={units==="metric"?"kg":"lb"}/>
       <Select label={isES?"Actividad":"Activity"} value={activity} onChange={setActivity} options={[{value:"low",label:isES?"Sedentario":"Sedentary"},{value:"moderate",label:isES?"Moderadamente activo":"Moderately active"},{value:"high",label:isES?"Muy activo":"Very active"}]}/>
       {water&&<Result label={isES?"Agua recomendada/día":"Recommended water/day"} value={water} unit="L/día"/>}
     </CalcCard>
@@ -189,7 +182,7 @@ function ProteinCalc({isES}) {
   const protMax=w>0?+(w*cond.max).toFixed(1):null;
   return (
     <CalcCard title={isES?"Calculadora de proteínas":"Protein Calculator"} desc={isES?"Requerimiento según condición y actividad":"Requirement by condition and activity"}>
-      <Input label={isES?"Peso (kg)":"Weight (kg)"} value={weight} onChange={setWeight} unit="kg"/>
+      <Input label={isES?"Peso":"Weight"} value={weight} onChange={setWeight} unit={units==="metric"?"kg":"lb"}/>
       <Select label={isES?"Condición / perfil":"Condition / profile"} value={condition} onChange={setCondition} options={conditions.map(c=>({value:c.value,label:c.label}))}/>
       {protMin&&<><Result label={isES?"Rango recomendado":"Recommended range"} value={`${protMin}–${protMax}`} unit="g/día"/><Result label="g/kg/día" value={`${cond.min}–${cond.max}`} unit="g/kg/día" color="#0F6E56" bg="#E1F5EE"/><Result label={isES?"Calorías de proteínas":"Calories from protein"} value={`${Math.round(protMin*4)}–${Math.round(protMax*4)}`} unit="kcal" color="#854F0B" bg="#FAEEDA"/></>}
     </CalcCard>
@@ -472,6 +465,106 @@ function SodiumCalc({isES}) {
   );
 }
 
+function ExerciseCalc({isES, units="metric"}) {
+  const [weight, setWeight] = useState("");
+  const [duration, setDuration] = useState("");
+  const [exercise, setExercise] = useState("walking");
+  const exercises = [
+    {value:"walking", es:"Caminar (paso moderado)", en:"Walking (moderate pace)", met:3.5},
+    {value:"walking_fast", es:"Caminar rápido", en:"Fast walking", met:4.5},
+    {value:"running_slow", es:"Correr (8 km/h)", en:"Running (8 km/h)", met:8.0},
+    {value:"running_fast", es:"Correr (12 km/h)", en:"Running (12 km/h)", met:11.5},
+    {value:"cycling_mod", es:"Ciclismo (moderado)", en:"Cycling (moderate)", met:6.0},
+    {value:"cycling_fast", es:"Ciclismo (intenso)", en:"Cycling (intense)", met:10.0},
+    {value:"swimming", es:"Natación (moderada)", en:"Swimming (moderate)", met:6.0},
+    {value:"weights", es:"Pesas / Fuerza", en:"Weights / Strength", met:4.0},
+    {value:"hiit", es:"HIIT / Entrenamiento intervalos", en:"HIIT / Interval training", met:10.0},
+    {value:"yoga", es:"Yoga", en:"Yoga", met:2.5},
+    {value:"dancing", es:"Baile / Zumba", en:"Dancing / Zumba", met:5.0},
+    {value:"soccer", es:"Fútbol", en:"Soccer", met:7.0},
+    {value:"basketball", es:"Basketball", en:"Basketball", met:6.5},
+    {value:"elliptical", es:"Elíptica", en:"Elliptical", met:5.0},
+    {value:"rope", es:"Saltar la cuerda", en:"Jump rope", met:10.0},
+    {value:"pilates", es:"Pilates", en:"Pilates", met:3.0},
+    {value:"stair", es:"Subir escaleras", en:"Stair climbing", met:8.0},
+    {value:"housework", es:"Labores del hogar", en:"Housework", met:3.0},
+  ];
+  const ex = exercises.find(e=>e.value===exercise);
+  const w = parseFloat(weight);
+  const d = parseFloat(duration);
+  const wkg = units==="imperial" ? w*0.453592 : w;
+  const kcal = w>0&&d>0 ? Math.round(ex.met * wkg * (d/60)) : null;
+  const steps = exercise==="walking"&&d>0 ? Math.round(d*100) : null;
+  return (
+    <CalcCard title={isES?"Calorías quemadas por ejercicio":"Calories burned by exercise"} desc={isES?"Basado en MET (Equivalente Metabólico)":"Based on MET (Metabolic Equivalent)"}>
+      <Input label={isES?"Peso (kg)":"Weight (kg)"} value={weight} onChange={setWeight} unit="kg"/>
+      <Input label={isES?"Duración (minutos)":"Duration (minutes)"} value={duration} onChange={setDuration} unit={isES?"min":"min"}/>
+      <Select label={isES?"Tipo de ejercicio":"Exercise type"} value={exercise} onChange={setExercise} options={exercises.map(e=>({value:e.value,label:isES?e.es:e.en}))}/>
+      {kcal&&(<div style={{marginTop:12,display:"flex",flexDirection:"column",gap:8}}>
+        <Result label={isES?"Calorías quemadas":"Calories burned"} value={kcal} unit="kcal"/>
+        <Result label={isES?"MET del ejercicio":"Exercise MET"} value={ex.met} unit="MET" color="#0F6E56" bg="#E1F5EE"/>
+        {steps&&<Result label={isES?"Pasos estimados":"Estimated steps"} value={steps.toLocaleString()} unit={isES?"pasos":"steps"} color="#854F0B" bg="#FAEEDA"/>}
+        <div style={{fontSize:11,color:"#3A5BA0",fontFamily:F,padding:"6px 10px",background:"#F5F7FF",borderRadius:6}}>{isES?"Fórmula: MET × peso(kg) × tiempo(h) = kcal. Valores aproximados.":"Formula: MET × weight(kg) × time(h) = kcal. Approximate values."}</div>
+      </div>)}
+    </CalcCard>
+  );
+}
+
+function FiberCalc({isES}) {
+  const [age, setAge] = useState("");
+  const [sex, setSex] = useState("F");
+  const [condition, setCondition] = useState("normal");
+  const conditions = [
+    {value:"normal", label:isES?"Persona sana":"Healthy person", factor:1.0},
+    {value:"dm2", label:isES?"Diabetes tipo 2":"Type 2 diabetes", factor:1.2},
+    {value:"cholesterol", label:isES?"Colesterol alto":"High cholesterol", factor:1.3},
+    {value:"constipation", label:isES?"Estreñimiento crónico":"Chronic constipation", factor:1.2},
+    {value:"ibs", label:isES?"Síndrome intestino irritable":"Irritable bowel syndrome", factor:0.8},
+    {value:"renal", label:isES?"Enfermedad renal":"Renal disease", factor:0.9},
+    {value:"pregnancy", label:isES?"Embarazo":"Pregnancy", factor:1.1},
+  ];
+  const cond = conditions.find(c=>c.value===condition);
+  const a = parseInt(age);
+  let base = null;
+  if(a>0){
+    if(sex==="F") base = a<=50 ? 25 : 21;
+    else base = a<=50 ? 38 : 30;
+  }
+  const goal = base ? Math.round(base * cond.factor) : null;
+  const soluble = goal ? Math.round(goal * 0.25) : null;
+  const insoluble = goal ? goal - soluble : null;
+  const sources = [
+    {food:isES?"Avena (1 taza cocida)":"Oats (1 cup cooked)", fiber:"4g", type:isES?"Soluble":"Soluble"},
+    {food:isES?"Frijoles (1/2 taza)":"Beans (1/2 cup)", fiber:"7g", type:isES?"Mixta":"Mixed"},
+    {food:isES?"Manzana con cáscara":"Apple with skin", fiber:"4g", type:isES?"Mixta":"Mixed"},
+    {food:isES?"Brócoli (1 taza)":"Broccoli (1 cup)", fiber:"5g", type:isES?"Insoluble":"Insoluble"},
+    {food:isES?"Psyllium (1 cda)":"Psyllium (1 tbsp)", fiber:"5g", type:isES?"Soluble":"Soluble"},
+    {food:isES?"Chía (2 cdas)":"Chia (2 tbsp)", fiber:"10g", type:isES?"Mixta":"Mixed"},
+    {food:isES?"Linaza (2 cdas)":"Flaxseed (2 tbsp)", fiber:"4g", type:isES?"Mixta":"Mixed"},
+  ];
+  return (
+    <CalcCard title={isES?"Calculadora de fibra diaria":"Daily fiber calculator"} desc={isES?"Recomendación según edad, sexo y condición":"Recommendation by age, sex and condition"}>
+      <div style={{display:"flex",gap:8,marginBottom:10}}>
+        {["F","M"].map(s=>(<button key={s} onClick={()=>setSex(s)} style={{padding:"6px 14px",borderRadius:20,border:"0.5px solid #D4E3FF",background:sex===s?BLUE:"transparent",color:sex===s?"#fff":NAVY,fontSize:12,fontFamily:F,cursor:"pointer"}}>{s==="F"?(isES?"Femenino":"Female"):(isES?"Masculino":"Male")}</button>))}
+      </div>
+      <Input label={isES?"Edad (años)":"Age (years)"} value={age} onChange={setAge} unit={isES?"años":"yrs"}/>
+      <Select label={isES?"Condición":"Condition"} value={condition} onChange={setCondition} options={conditions.map(c=>({value:c.value,label:c.label}))}/>
+      {goal&&(<div style={{marginTop:12,display:"flex",flexDirection:"column",gap:8}}>
+        <Result label={isES?"Fibra total recomendada":"Recommended total fiber"} value={goal} unit="g/día"/>
+        <Result label={isES?"Fibra soluble (~25%)":"Soluble fiber (~25%)"} value={soluble} unit="g/día" color="#0F6E56" bg="#E1F5EE"/>
+        <Result label={isES?"Fibra insoluble (~75%)":"Insoluble fiber (~75%)"} value={insoluble} unit="g/día" color="#854F0B" bg="#FAEEDA"/>
+        <div style={{marginTop:4}}>
+          <div style={{fontSize:11,fontWeight:600,color:NAVY,fontFamily:F,marginBottom:6}}>{isES?"Fuentes recomendadas:":"Recommended sources:"}</div>
+          {sources.map((s,i)=>(<div key={i} style={{display:"flex",justifyContent:"space-between",padding:"5px 8px",background:"#F5F7FF",borderRadius:6,marginBottom:3}}>
+            <span style={{fontSize:11,color:"#3A5BA0",fontFamily:F}}>{s.food}</span>
+            <span style={{fontSize:11,fontWeight:500,color:BLUE,fontFamily:F}}>{s.fiber} · {s.type}</span>
+          </div>))}
+        </div>
+      </div>)}
+    </CalcCard>
+  );
+}
+
 const GROUPS = [
   {id:"body", es:"Composición corporal", en:"Body composition", tools:[
     {id:"bmi", es:"IMC / BMI", en:"BMI"},
@@ -481,6 +574,7 @@ const GROUPS = [
   {id:"energy1", es:"Energía", en:"Energy", tools:[
     {id:"tdee", es:"TDEE / GCT", en:"TDEE"},
     {id:"macro", es:"Macronutrientes", en:"Macros"},
+    {id:"exercise", es:"Calorías por ejercicio", en:"Calories by exercise"},
   ]},
   {id:"energy2", es:"Macros individuales", en:"Individual macros", tools:[
     {id:"carb", es:"Carbohidratos", en:"Carbohydrates"},
@@ -490,6 +584,7 @@ const GROUPS = [
   {id:"nutrition", es:"Nutrición", en:"Nutrition", tools:[
     {id:"glycemic", es:"Índice glucémico", en:"Glycemic index"},
     {id:"gluten", es:"Verificador de gluten", en:"Gluten checker"},
+    {id:"fiber", es:"Calculadora de fibra", en:"Fiber calculator"},
   ]},
   {id:"other", es:"Otros", en:"Other", tools:[
     {id:"water", es:"Agua", en:"Water intake"},
@@ -501,9 +596,10 @@ const GROUPS = [
 export default function Tools({lang}) {
   const isES = lang === "ES";
   const [active, setActive] = useState("bmi");
+  const [units, setUnits] = useState("metric");
   useState(()=>{
     const hash = window.location.hash.replace("#","");
-    const allTools = ["bmi","bodyfat","ideal","tdee","macro","carb","protein","fat","water","hr","glycemic","gluten"];
+    const allTools = ["bmi","bodyfat","ideal","tdee","macro","carb","protein","fat","water","hr","glycemic","gluten","sodium","exercise","fiber"];
     if(allTools.includes(hash)) setActive(hash);
   });
   return (
@@ -511,6 +607,16 @@ export default function Tools({lang}) {
       <div style={{fontSize:11,fontWeight:500,color:TEAL,textTransform:"uppercase",letterSpacing:"0.08em",marginBottom:6,fontFamily:F}}>{isES?"Herramientas":"Tools"}</div>
       <div style={{fontSize:26,fontWeight:500,color:NAVY,marginBottom:6,fontFamily:F}}>{isES?"Calculadoras de salud y nutrición":"Health and nutrition calculators"}</div>
       <div style={{fontSize:13,color:"#3A5BA0",marginBottom:28,fontFamily:F}}>{isES?"Gratuitas, bilingües, basadas en evidencia.":"Free, bilingual, evidence-based."}</div>
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:20,flexWrap:"wrap",gap:10}}>
+        <div style={{fontSize:12,color:"#3A5BA0",fontFamily:F}}>{isES?"Sistema de unidades:":"Unit system:"}</div>
+        <div style={{display:"flex",gap:4,background:"#F5F7FF",borderRadius:20,padding:4}}>
+          {[{id:"metric",es:"Métrico (kg, cm)",en:"Metric (kg, cm)"},{id:"imperial",es:"Imperial (lb, in)",en:"Imperial (lb, in)"}].map(u=>(
+            <button key={u.id} onClick={()=>setUnits(u.id)} style={{padding:"5px 14px",borderRadius:16,border:"none",background:units===u.id?NAVY:"transparent",color:units===u.id?"#E2E8F0":"#3A5BA0",fontSize:12,fontFamily:F,cursor:"pointer",fontWeight:units===u.id?500:400}}>
+              {isES?u.es:u.en}
+            </button>
+          ))}
+        </div>
+      </div>
       <div style={{display:"flex",gap:32,marginBottom:28,flexWrap:"wrap"}}>
         {GROUPS.map(g=>(
           <div key={g.id} style={{minWidth:140}}>
@@ -526,16 +632,18 @@ export default function Tools({lang}) {
         ))}
       </div>
       <div style={{maxWidth:720}}>
-        {active==="bmi"&&<BMICalc isES={isES}/>}
-        {active==="tdee"&&<TDEECalc isES={isES}/>}
+        {active==="bmi"&&<BMICalc isES={isES} units={units}/>}
+        {active==="tdee"&&<TDEECalc isES={isES} units={units}/>}
         {active==="macro"&&<MacroCalc isES={isES}/>}
-        {active==="ideal"&&<IdealWeightCalc isES={isES}/>}
-        {active==="bodyfat"&&<BodyFatCalc isES={isES}/>}
-        {active==="water"&&<WaterCalc isES={isES}/>}
+        {active==="ideal"&&<IdealWeightCalc isES={isES} units={units}/>}
+        {active==="bodyfat"&&<BodyFatCalc isES={isES} units={units}/>}
+        {active==="water"&&<WaterCalc isES={isES} units={units}/>}
         {active==="hr"&&<HeartRateCalc isES={isES}/>}
         {active==="glycemic"&&<GlycemicCalc isES={isES}/>}
         {active==="gluten"&&<GlutenCalc isES={isES}/>}
         {active==="sodium"&&<SodiumCalc isES={isES}/>}
+        {active==="exercise"&&<ExerciseCalc isES={isES} units={units}/>}
+        {active==="fiber"&&<FiberCalc isES={isES}/>}
         {active==="carb"&&<CarbCalc isES={isES}/>}
         {active==="protein"&&<ProteinCalc isES={isES}/>}
         {active==="fat"&&<FatCalc isES={isES}/>}
