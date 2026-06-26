@@ -319,6 +319,81 @@ function GlycemicCalc({isES}) {
   );
 }
 
+function GlutenCalc({isES}) {
+  const [query, setQuery] = useState("");
+  const foods = [
+    {name:"Trigo / Wheat", status:"gluten", reason:isES?"Contiene gluten — proteínas gliadina y glutenina":"Contains gluten — gliadin and glutenin proteins"},
+    {name:"Cebada / Barley", status:"gluten", reason:isES?"Contiene gluten — proteína hordeína":"Contains gluten — hordein protein"},
+    {name:"Centeno / Rye", status:"gluten", reason:isES?"Contiene gluten — proteína secalina":"Contains gluten — secalin protein"},
+    {name:"Espelta / Spelt", status:"gluten", reason:isES?"Variedad de trigo — contiene gluten":"Wheat variety — contains gluten"},
+    {name:"Triticale", status:"gluten", reason:isES?"Híbrido trigo-centeno — contiene gluten":"Wheat-rye hybrid — contains gluten"},
+    {name:"Kamut", status:"gluten", reason:isES?"Variedad antigua de trigo — contiene gluten":"Ancient wheat variety — contains gluten"},
+    {name:"Pan / Bread", status:"gluten", reason:isES?"Generalmente hecho de trigo":"Generally made from wheat"},
+    {name:"Pasta / Pasta", status:"gluten", reason:isES?"Hecha de trigo — buscar versión sin gluten":"Made from wheat — look for gluten-free version"},
+    {name:"Harina de trigo / Wheat flour", status:"gluten", reason:isES?"Contiene gluten":"Contains gluten"},
+    {name:"Sémola / Semolina", status:"gluten", reason:isES?"Derivado del trigo duro":"Derived from durum wheat"},
+    {name:"Cuscús / Couscous", status:"gluten", reason:isES?"Hecho de sémola de trigo":"Made from wheat semolina"},
+    {name:"Bulgur", status:"gluten", reason:isES?"Trigo partido — contiene gluten":"Cracked wheat — contains gluten"},
+    {name:"Cerveza / Beer", status:"gluten", reason:isES?"Hecha de cebada — contiene gluten (salvo versión sin gluten)":"Made from barley — contains gluten (unless gluten-free version)"},
+    {name:"Salsa de soya / Soy sauce", status:"gluten", reason:isES?"La mayoría contiene trigo — buscar tamari":"Most contain wheat — look for tamari"},
+    {name:"Avena / Oats", status:"caution", reason:isES?"Sin gluten naturalmente pero frecuente contaminación cruzada — buscar certificada sin gluten":"Naturally gluten-free but frequent cross-contamination — look for certified gluten-free"},
+    {name:"Arroz / Rice", status:"safe", reason:isES?"Sin gluten — seguro para celiaquía":"Gluten-free — safe for celiac disease"},
+    {name:"Maíz / Corn", status:"safe", reason:isES?"Sin gluten naturalmente":"Naturally gluten-free"},
+    {name:"Quinoa", status:"safe", reason:isES?"Sin gluten — pseudocereal seguro":"Gluten-free — safe pseudocereal"},
+    {name:"Papa / Potato", status:"safe", reason:isES?"Sin gluten":"Gluten-free"},
+    {name:"Camote / Sweet potato", status:"safe", reason:isES?"Sin gluten":"Gluten-free"},
+    {name:"Yuca / Cassava", status:"safe", reason:isES?"Sin gluten — fuente de tapioca":"Gluten-free — source of tapioca"},
+    {name:"Amaranto / Amaranth", status:"safe", reason:isES?"Sin gluten — alto en proteína":"Gluten-free — high in protein"},
+    {name:"Trigo sarraceno / Buckwheat", status:"safe", reason:isES?"Sin gluten a pesar del nombre — no es trigo":"Gluten-free despite the name — not wheat"},
+    {name:"Mijo / Millet", status:"safe", reason:isES?"Sin gluten naturalmente":"Naturally gluten-free"},
+    {name:"Sorgo / Sorghum", status:"safe", reason:isES?"Sin gluten":"Gluten-free"},
+    {name:"Harina de almendra / Almond flour", status:"safe", reason:isES?"Sin gluten":"Gluten-free"},
+    {name:"Harina de coco / Coconut flour", status:"safe", reason:isES?"Sin gluten":"Gluten-free"},
+    {name:"Harina de arroz / Rice flour", status:"safe", reason:isES?"Sin gluten":"Gluten-free"},
+    {name:"Tapioca", status:"safe", reason:isES?"Sin gluten — derivado de yuca":"Gluten-free — derived from cassava"},
+    {name:"Leche / Milk", status:"safe", reason:isES?"Sin gluten naturalmente":"Naturally gluten-free"},
+    {name:"Huevo / Egg", status:"safe", reason:isES?"Sin gluten":"Gluten-free"},
+    {name:"Carne / Meat", status:"safe", reason:isES?"Sin gluten — verificar marinados y embutidos":"Gluten-free — check marinades and cold cuts"},
+    {name:"Pescado / Fish", status:"safe", reason:isES?"Sin gluten natural — verificar empanados":"Naturally gluten-free — check breading"},
+    {name:"Leguminosas / Legumes", status:"safe", reason:isES?"Sin gluten — verificar contaminación cruzada en empaque":"Gluten-free — check cross-contamination on packaging"},
+    {name:"Frutas / Fruits", status:"safe", reason:isES?"Sin gluten naturalmente":"Naturally gluten-free"},
+    {name:"Verduras / Vegetables", status:"safe", reason:isES?"Sin gluten naturalmente":"Naturally gluten-free"},
+    {name:"Aceite / Oil", status:"safe", reason:isES?"Sin gluten":"Gluten-free"},
+    {name:"Vinagre de manzana / Apple cider vinegar", status:"safe", reason:isES?"Sin gluten":"Gluten-free"},
+    {name:"Vinagre de malta / Malt vinegar", status:"gluten", reason:isES?"Derivado de la cebada — contiene gluten":"Derived from barley — contains gluten"},
+    {name:"Salsa Worcestershire", status:"caution", reason:isES?"Algunas marcas contienen extracto de malta de cebada — verificar etiqueta":"Some brands contain barley malt extract — check label"},
+    {name:"Chocolate oscuro / Dark chocolate", status:"caution", reason:isES?"El cacao es sin gluten pero verificar contaminación cruzada y aditivos":"Cocoa is gluten-free but check cross-contamination and additives"},
+    {name:"Almidón de maíz / Corn starch", status:"safe", reason:isES?"Sin gluten":"Gluten-free"},
+    {name:"Almidón de trigo / Wheat starch", status:"caution", reason:isES?"Depende del proceso — algunos son aptos para celiaquía si < 20 ppm":"Depends on process — some are celiac-safe if < 20 ppm"},
+  ];
+  const filtered = query.length > 1 ? foods.filter(f=>f.name.toLowerCase().includes(query.toLowerCase())).slice(0,8) : [];
+  const statusColor = s => s==="gluten"?"#A32D2D":s==="caution"?"#854F0B":"#0F6E56";
+  const statusBg = s => s==="gluten"?"#FCEBEB":s==="caution"?"#FAEEDA":"#E1F5EE";
+  const statusLabel = s => s==="gluten"?(isES?"❌ Contiene gluten":"❌ Contains gluten"):s==="caution"?(isES?"⚠️ Verificar / Precaución":"⚠️ Check / Caution"):(isES?"✓ Sin gluten":"✓ Gluten-free");
+  return (
+    <CalcCard title={isES?"Verificador de gluten":"Gluten checker"} desc={isES?"Busca cualquier alimento o ingrediente":"Search any food or ingredient"}>
+      <div style={{display:"flex",gap:8,marginBottom:10}}>
+        {["gluten","caution","safe"].map(s=>(
+          <div key={s} style={{padding:"4px 10px",borderRadius:20,background:statusBg(s),color:statusColor(s),fontSize:10,fontWeight:500,fontFamily:F}}>{statusLabel(s)}</div>
+        ))}
+      </div>
+      <input value={query} onChange={e=>setQuery(e.target.value)} placeholder={isES?"Buscar alimento... ej: avena, arroz, pan":"Search food... e.g. oats, rice, bread"} style={{width:"100%",padding:"9px 12px",borderRadius:8,border:"0.5px solid #D4E3FF",fontSize:13,fontFamily:F,outline:"none",boxSizing:"border-box",marginBottom:8}}/>
+      {filtered.map(f=>(
+        <div key={f.name} style={{padding:"10px 12px",borderBottom:"0.5px solid #F0F4FF",display:"flex",justifyContent:"space-between",alignItems:"center",gap:12}}>
+          <div>
+            <div style={{fontSize:12,color:NAVY,fontFamily:F,marginBottom:2}}>{f.name}</div>
+            <div style={{fontSize:11,color:"#3A5BA0",fontFamily:F}}>{f.reason}</div>
+          </div>
+          <span style={{fontSize:11,fontWeight:500,padding:"3px 10px",borderRadius:10,background:statusBg(f.status),color:statusColor(f.status),fontFamily:F,whiteSpace:"nowrap",flexShrink:0}}>{statusLabel(f.status)}</span>
+        </div>
+      ))}
+      {query.length > 1 && filtered.length === 0 && (
+        <div style={{padding:"12px",textAlign:"center",color:"#3A5BA0",fontSize:12,fontFamily:F}}>{isES?"No encontrado — consulta con tu nutricionista":"Not found — consult your nutritionist"}</div>
+      )}
+    </CalcCard>
+  );
+}
+
 const GROUPS = [
   {id:"body", es:"Composición corporal", en:"Body composition", tools:[
     {id:"bmi", es:"IMC / BMI", en:"BMI"},
@@ -336,6 +411,7 @@ const GROUPS = [
   ]},
   {id:"nutrition", es:"Nutrición", en:"Nutrition", tools:[
     {id:"glycemic", es:"Índice glucémico", en:"Glycemic index"},
+    {id:"gluten", es:"Verificador de gluten", en:"Gluten checker"},
   ]},
   {id:"other", es:"Otros", en:"Other", tools:[
     {id:"water", es:"Agua", en:"Water intake"},
@@ -374,6 +450,7 @@ export default function Tools({lang}) {
         {active==="water"&&<WaterCalc isES={isES}/>}
         {active==="hr"&&<HeartRateCalc isES={isES}/>}
         {active==="glycemic"&&<GlycemicCalc isES={isES}/>}
+        {active==="gluten"&&<GlutenCalc isES={isES}/>}
         {active==="carb"&&<CarbCalc isES={isES}/>}
         {active==="protein"&&<ProteinCalc isES={isES}/>}
         {active==="fat"&&<FatCalc isES={isES}/>}

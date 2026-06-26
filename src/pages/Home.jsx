@@ -94,13 +94,14 @@ export default function Home({lang}) {
         <div style={{fontSize:11, fontWeight:500, color:TEAL, textTransform:"uppercase", letterSpacing:"0.08em", marginBottom:6, fontFamily:F}}>{isES?"Herramientas gratuitas":"Free tools"}</div>
         <div style={{fontSize:22, fontWeight:500, color:NAVY, marginBottom:6, fontFamily:F}}>{isES?"Referencia clínica al instante":"Clinical reference instantly"}</div>
         <div style={{fontSize:13, color:"#3A5BA0", marginBottom:28, fontFamily:F}}>{isES?"Sin registro. Sin costo. Solo abre y usa.":"No signup. No cost. Just open and use."}</div>
-        <div style={{display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:12}}>
+        <div style={{display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:12}}>
           {[
-            {title: isES?"Índice glucémico":"Glycemic index", desc: isES?"Busca cualquier alimento y obtén su IG y carga glucémica.":"Search any food and get its GI and glycemic load."},
-            {title: isES?"Calculadora de intercambios":"Exchange calculator", desc: isES?"Plan de intercambios INCAP/USDA con distribución por tiempo.":"INCAP/USDA exchange plan with meal time distribution."},
-            {title: isES?"Tracker de sodio":"Sodium tracker", desc: isES?"Monitorea ingesta de sodio para manejo de hipertensión.":"Monitor sodium intake for hypertension management."},
+            {title: isES?"Índice glucémico":"Glycemic index", desc: isES?"Busca cualquier alimento y obtén su IG y carga glucémica.":"Search any food and get its GI and glycemic load.", url:"/tools#glycemic"},
+            {title: isES?"Verificador de gluten":"Gluten checker", desc: isES?"Sabe si un alimento contiene gluten o no al instante.":"Know instantly if a food contains gluten or not.", url:"/tools#gluten"},
+            {title: isES?"Calculadora de intercambios":"Exchange calculator", desc: isES?"Plan de intercambios INCAP/USDA con distribución por tiempo.":"INCAP/USDA exchange plan with meal time distribution.", url:"https://learn.nutrionally.com/#s1"},
+            {title: isES?"Tracker de sodio":"Sodium tracker", desc: isES?"Monitorea ingesta de sodio para manejo de hipertensión.":"Monitor sodium intake for hypertension management.", url:"/tools"},
           ].map(t=>(
-            <div key={t.title} onClick={()=>navigate("/tools")} style={{background:"#F5F7FF", border:"0.5px solid #D4E3FF", borderRadius:12, padding:"18px 16px", cursor:"pointer"}}>
+            <div key={t.title} onClick={()=>{if(t.url.startsWith("http")){window.open(t.url,"_blank");}else{const[path,hash]=t.url.split("#");navigate(path);if(hash)setTimeout(()=>{const el=document.getElementById(hash);if(el)el.scrollIntoView();},100);}}} style={{background:"#F5F7FF", border:"0.5px solid #D4E3FF", borderRadius:12, padding:"18px 16px", cursor:"pointer"}}>
               <div style={{width:8, height:8, borderRadius:"50%", background:TEAL, marginBottom:10}}/>
               <div style={{fontSize:13, fontWeight:500, color:NAVY, marginBottom:4, fontFamily:F}}>{t.title}</div>
               <div style={{fontSize:11, color:"#3A5BA0", lineHeight:1.5, fontFamily:F}}>{t.desc}</div>
