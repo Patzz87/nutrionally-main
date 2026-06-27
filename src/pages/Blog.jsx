@@ -605,6 +605,7 @@ function PostContent({blocks, isES, navigate}) {
 }
 
 export default function Blog({lang}) {
+  const [active, setActive] = useState(null);
   const isES = lang === "ES";
   const activePost = active ? POSTS.find(p=>p.id===active) : null;
   const blogSchema = activePost ? {
@@ -622,8 +623,6 @@ export default function Blog({lang}) {
   } : null;
   if(isES){useMeta({title: activePost?activePost.title_es+" — Nutrionally":"Blog de nutrición clínica — Nutrionally", description: activePost?activePost.intro_es:"Artículos de nutrición clínica basados en evidencia: IMC, diabetes, índice glucémico, tiroides, gota, embarazo y más.", url: activePost?"https://nutrionally.com/blog#"+activePost.id:"https://nutrionally.com/blog", schema:blogSchema});}
   else{useMeta({title: activePost?activePost.title_en+" — Nutrionally":"Clinical nutrition blog — Nutrionally", description: activePost?activePost.intro_en:"Evidence-based clinical nutrition articles: BMI, diabetes, glycemic index, thyroid, gout, pregnancy and more.", url: activePost?"https://nutrionally.com/blog#"+activePost.id:"https://nutrionally.com/blog", schema:blogSchema});}
-  const [active, setActive] = useState(null);
-
   if(active) {
     const post = POSTS.find(p=>p.id===active);
     const content = isES ? post.content_es : post.content_en;
