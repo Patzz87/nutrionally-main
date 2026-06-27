@@ -1,4 +1,4 @@
-export function useMeta({title, description, url}) {
+export function useMeta({title, description, url, schema}) {
   if(typeof document === "undefined") return;
   document.title = title;
   let desc = document.querySelector('meta[name="description"]');
@@ -13,4 +13,5 @@ export function useMeta({title, description, url}) {
   if(twTitle) twTitle.setAttribute("content", title);
   let twDesc = document.querySelector('meta[name="twitter:description"]');
   if(twDesc) twDesc.setAttribute("content", description);
+  if(schema){let el=document.getElementById("dynamic-schema");if(!el){el=document.createElement("script");el.id="dynamic-schema";el.type="application/ld+json";document.head.appendChild(el);}el.textContent=JSON.stringify(schema);}else{const el=document.getElementById("dynamic-schema");if(el)el.remove();}
 }

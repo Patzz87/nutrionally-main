@@ -606,7 +606,22 @@ function PostContent({blocks, isES, navigate}) {
 
 export default function Blog({lang}) {
   const isES = lang === "ES";
-  if(isES) {useMeta({title:"Blog de nutrición clínica — Nutrionally", description:"Artículos de nutrición clínica basados en evidencia: IMC, diabetes, índice glucémico, tiroides, gota, embarazo y más.", url:"https://nutrionally.com/blog"});} else {useMeta({title:"Clinical nutrition blog — Nutrionally", description:"Evidence-based clinical nutrition articles: BMI, diabetes, glycemic index, thyroid, gout, pregnancy and more.", url:"https://nutrionally.com/blog"});}
+  const activePost = active ? POSTS.find(p=>p.id===active) : null;
+  const blogSchema = activePost ? {
+    "@context":"https://schema.org","@type":"BlogPosting",
+    "headline": isES ? activePost.title_es : activePost.title_en,
+    "description": isES ? activePost.intro_es : activePost.intro_en,
+    "url": "https://nutrionally.com/blog#"+activePost.id,
+    "datePublished": activePost.date, "dateModified": activePost.date,
+    "inLanguage": isES?"es":"en",
+    "image":{"@type":"ImageObject","url":"https://nutrionally.com/og-image.png","width":1200,"height":630},
+    "author":{"@type":"Organization","name":"Nutrionally","url":"https://nutrionally.com"},
+    "publisher":{"@type":"Organization","name":"Nutrionally","url":"https://nutrionally.com","logo":{"@type":"ImageObject","url":"https://nutrionally.com/favicon.svg"}},
+    "mainEntityOfPage":{"@type":"WebPage","@id":"https://nutrionally.com/blog#"+activePost.id},
+    "keywords": isES ? activePost.tag_es : activePost.tag_en
+  } : null;
+  if(isES){useMeta({title: activePost?activePost.title_es+" — Nutrionally":"Blog de nutrición clínica — Nutrionally", description: activePost?activePost.intro_es:"Artículos de nutrición clínica basados en evidencia: IMC, diabetes, índice glucémico, tiroides, gota, embarazo y más.", url: activePost?"https://nutrionally.com/blog#"+activePost.id:"https://nutrionally.com/blog", schema:blogSchema});}
+  else{useMeta({title: activePost?activePost.title_en+" — Nutrionally":"Clinical nutrition blog — Nutrionally", description: activePost?activePost.intro_en:"Evidence-based clinical nutrition articles: BMI, diabetes, glycemic index, thyroid, gout, pregnancy and more.", url: activePost?"https://nutrionally.com/blog#"+activePost.id:"https://nutrionally.com/blog", schema:blogSchema});}
   const [active, setActive] = useState(null);
 
   if(active) {
