@@ -55,7 +55,7 @@ export default function Recipe({lang}) {
   const [results, setResults]   = useState([]);
   const [loading, setLoading]   = useState(false);
   const [ingredients, setIngredients] = useState([]);
-  const [diners, setDiners]     = useState(1);
+  const [diners, setDiners]     = useState("1");
   const [recipeName, setRecipeName] = useState("");
   const [saved, setSaved]       = useState(() => { try { return JSON.parse(localStorage.getItem("nl_recipes_v1")||"[]"); } catch { return []; }});
   const [showSaved, setShowSaved] = useState(false);
@@ -101,7 +101,7 @@ export default function Recipe({lang}) {
   }, {kcal:0,protein:0,fat:0,carbs:0,fiber:0,sodium:0});
 
   const perPerson = Object.fromEntries(
-    Object.entries(totals).map(([k,v]) => [k, +(v/Math.max(diners,1)).toFixed(1)])
+    Object.entries(totals).map(([k,v]) => [k, +(v/Math.max(parseFloat(diners)||1,0.5)).toFixed(1)])
   );
 
   const saveRecipe = () => {
@@ -193,7 +193,7 @@ export default function Recipe({lang}) {
         </div>
         <div>
           <label style={{fontSize:12,color:"#3A5BA0",fontFamily:F,display:"block",marginBottom:4}}>{isES?"Número de porciones":"Number of servings"}</label>
-          <input type="number" min={1} value={diners} onChange={e=>setDiners(parseInt(e.target.value)||1)} style={inputStyle}/>
+          <input type="number" min={1} value={diners} onChange={e=>setDiners(e.target.value)} onBlur={e=>setDiners(v=>!v||parseFloat(v)<0.5?"1":v)} style={inputStyle}/>
         </div>
       </div>
 
@@ -218,7 +218,7 @@ export default function Recipe({lang}) {
           <div style={{fontSize:14,fontWeight:500,color:NAVY,fontFamily:F,marginBottom:12}}>{isES?"Ingredientes":"Ingredients"}</div>
           {ingredients.map((item,idx)=>(
             <div key={idx} style={{display:"flex",alignItems:"center",gap:10,marginBottom:8,padding:"8px 12px",background:"#F5F7FF",borderRadius:8}}>
-              <div style={{flex:1,fontSize:12,color:NAVY,fontFamily:F}}>{item.name}</div>
+              <div style={{flex:1,fontFamily:F}}><div style={{fontSize:12,color:NAVY}}>{item.name}</div><div style={{fontSize:10,color:"#3A5BA0"}}>{isES?"valores por 100g":"values per 100g"}</div></div>
               <input type="number" min={1} value={item.grams} onChange={e=>updateGrams(idx,e.target.value)} style={{width:70,padding:"4px 8px",borderRadius:6,border:"0.5px solid #D4E3FF",fontSize:12,fontFamily:F,color:NAVY,textAlign:"right"}}/>
               <span style={{fontSize:11,color:"#3A5BA0",fontFamily:F}}>g</span>
               <span style={{fontSize:11,color:"#3A5BA0",fontFamily:F,minWidth:80}}>{calc("kcal",item)} kcal</span>

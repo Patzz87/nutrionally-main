@@ -3,6 +3,7 @@ const F = "Plus Jakarta Sans, sans-serif";
 const NAV = [
   {path:"/", es:"Inicio", en:"Home"},
   {path:"/tools", es:"Herramientas", en:"Tools"},
+  {path:"/recipe", es:"Recetas", en:"Recipes"},
   {path:"/conditions", es:"Condiciones", en:"Conditions"},
   {path:"/blog", es:"Blog", en:"Blog"},
   {path:"/about", es:"Nosotros", en:"About"},
