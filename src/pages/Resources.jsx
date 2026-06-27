@@ -68,7 +68,7 @@ export default function Resources({lang}) {
 
   return (
     <div style={{padding:"40px 32px",maxWidth:960,margin:"0 auto"}}>
-      <script src="https://payhip.com/payhip.js" async></script>
+
       <div style={{fontSize:11,fontWeight:500,color:TEAL,textTransform:"uppercase",letterSpacing:"0.08em",marginBottom:6,fontFamily:F}}>
         {isES?"Recursos":"Resources"}
       </div>
