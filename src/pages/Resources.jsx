@@ -84,7 +84,7 @@ export default function Resources({lang}) {
             padding:"6px 18px",borderRadius:20,border:"1px solid",fontFamily:F,fontSize:12,fontWeight:500,cursor:"pointer",
             background:tab===t?NAVY:"transparent",color:tab===t?"#fff":NAVY,borderColor:tab===t?NAVY:"#D4E3FF",
           }}>
-            {t==="es"?"🇲🇽 Español":"🇺🇸 English"}
+            {t==="es"?"Español":"English"}
           </button>
         ))}
       </div>
