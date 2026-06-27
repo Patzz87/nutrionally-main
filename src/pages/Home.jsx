@@ -56,7 +56,7 @@ export default function Home({lang}) {
 
       <div style={{background:"#162338", padding:"20px 32px", display:"flex", justifyContent:"center", gap:52}}>
         {[
-          {num:"4", lbl: isES?"Herramientas gratuitas":"Free tools"},
+          {num:"19+", lbl: isES?"Herramientas gratuitas":"Free tools"},
           {num:"ES / EN", lbl: isES?"Bilingüe":"Bilingual"},
           {num:"INCAP", lbl: isES?"Datos certificados":"Certified data"},
           {num:"100%", lbl: isES?"Basado en evidencia":"Evidence based"},
@@ -78,7 +78,7 @@ export default function Home({lang}) {
             {icon:"📊", name:isES?"Calculadoras de salud":"Health calculators", desc: isES?"15+ calculadoras: IMC, TDEE, macros, índice glucémico, verificador de gluten, tracker de sodio y más.":"15+ calculators: BMI, TDEE, macros, glycemic index, gluten checker, sodium tracker and more.", tag: isES?"Gratis":"Free", tagColor:"#E1F5EE", tagText:"#0F6E56", href:"/tools", clickable:true},
             {icon:"🍽️", name:isES?"Calculadora de recetas":"Recipe calculator", desc:isES?"Calcula el valor nutricional de cualquier receta. Base de datos USDA con 300,000+ alimentos. Guarda tus recetas favoritas.":"Calculate the nutritional value of any recipe. USDA database with 300,000+ foods. Save your favorite recipes.", tag:isES?"Gratis":"Free", tagColor:"#E1F5EE", tagText:"#0F6E56", href:"/recipe", clickable:true},
             {icon:"📚", name:isES?"Guías por condición":"Condition guides", desc: isES?"12 guías clínicas: DM2, HTN, obesidad, ERC, artritis, gota, fertilidad, alergias, embarazo, cáncer, colesterol, tiroides.":"12 clinical guides: T2DM, HTN, obesity, CKD, arthritis, gout, fertility, allergies, pregnancy, cancer, cholesterol, thyroid.", tag: isES?"Gratis":"Free", tagColor:"#E1F5EE", tagText:"#0F6E56", href:"/conditions", clickable:true},
-            {icon:"📄", name:isES?"Recursos y guías PDF":"Resources and PDF guides", desc: isES?"Guías clínicas descargables, planes de alimentación y recursos para profesionales de la salud.":"Downloadable clinical guides, meal plans and resources for health professionals.", tag: isES?"Próximamente":"Coming soon", tagColor:"#F5F7FF", tagText:"#3A5BA0", href:null, clickable:false},
+            {icon:"📄", name:isES?"Recursos y guías PDF":"Resources and PDF guides", desc: isES?"Guías clínicas descargables, planes de alimentación y recursos para profesionales de la salud.":"Downloadable clinical guides, meal plans and resources for health professionals.", tag: isES?"Nuevo":"New", tagColor:"#E1F5EE", tagText:"#085041", href:"/resources", clickable:true},
           ].map(p=>(
             <div key={p.name}
               onClick={()=>{if(!p.clickable)return;if(p.href&&p.href.startsWith("http")){window.open(p.href,"_blank");}else if(p.href){window.location.href=p.href;}}}
