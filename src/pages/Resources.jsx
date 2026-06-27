@@ -58,8 +58,11 @@ export default function Resources({lang}) {
     : {title:"Clinical nutrition resources — Nutrionally",description:"Downloadable clinical nutrition PDF guides: T2D, HTN, CKD, glycemic index, INCAP exchanges, clinical formulas, TPN/EN and solved clinical cases.",url:"https://nutrionally.com/resources"});
 
   const openPayhip = (id) => {
-    if(window.Payhip) window.Payhip.Checkout.open({product:id});
-    else window.open("https://payhip.com/b/"+id,"_blank");
+    if(window.Payhip){window.Payhip.Checkout.open({product:id});return;}
+    const s=document.createElement("script");s.src="https://payhip.com/payhip.js";
+    s.onload=()=>window.Payhip.Checkout.open({product:id});
+    s.onerror=()=>window.open("https://payhip.com/b/"+id,"_blank");
+    document.head.appendChild(s);
   };
 
   const products = PRODUCTS[tab];
