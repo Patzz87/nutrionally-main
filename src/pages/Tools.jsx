@@ -781,6 +781,7 @@ const GROUPS = [
     {id:"fiber", es:"Calculadora de fibra", en:"Fiber calculator"},
   ]},
   {id:"other", es:"Otros", en:"Other", tools:[
+    {id:"recipe", es:"🍽️ Calculadora de recetas", en:"🍽️ Recipe calculator"},
     {id:"water", es:"Agua", en:"Water intake"},
     {id:"hr", es:"Frecuencia cardíaca", en:"Heart rate"},
     {id:"sodium", es:"Tracker de sodio", en:"Sodium tracker"},
@@ -833,6 +834,13 @@ export default function Tools({lang}) {
         {active==="macro"&&<MacroCalc isES={isES}/>}
         {active==="ideal"&&<IdealWeightCalc isES={isES} units={units}/>}
         {active==="bodyfat"&&<BodyFatCalc isES={isES} units={units}/>}
+        {active==="recipe"&&(
+          <div style={{background:"#fff",border:"0.5px solid #D4E3FF",borderRadius:12,padding:24,marginBottom:16}}>
+            <div style={{fontSize:15,fontWeight:500,color:NAVY,marginBottom:4,fontFamily:F}}>{isES?"Calculadora de recetas":"Recipe calculator"}</div>
+            <div style={{fontSize:12,color:"#3A5BA0",marginBottom:16,fontFamily:F}}>{isES?"Calcula el valor nutricional de cualquier receta con la base de datos USDA (300,000+ alimentos). Guarda tus recetas, ajusta porciones y obtén semáforo nutricional.":"Calculate the nutritional value of any recipe with the USDA database (300,000+ foods). Save recipes, adjust servings and get a nutrition traffic light."}</div>
+            <a href="/recipe" style={{display:"inline-block",padding:"9px 20px",borderRadius:8,background:TEAL,color:"#fff",fontSize:13,fontWeight:500,textDecoration:"none",fontFamily:F}}>{isES?"Abrir calculadora de recetas →":"Open recipe calculator →"}</a>
+          </div>
+        )}
         {active==="water"&&<WaterCalc isES={isES} units={units}/>}
         {active==="vo2max"&&<VO2maxCalc isES={isES} units={units}/>}
         {active==="hr"&&<HeartRateCalc isES={isES}/>}

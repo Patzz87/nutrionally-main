@@ -1,4 +1,5 @@
 import { Routes, Route } from "react-router-dom";
+import Recipe from "./pages/Recipe.jsx";
 import { useState, useEffect } from "react";
 import Navbar from "./components/Navbar.jsx";
 import Home from "./pages/Home.jsx";
@@ -75,6 +76,7 @@ export default function App() {
           <Route path="/resources" element={<Resources lang={lang}/>}/>
           <Route path="/blog" element={<Blog lang={lang}/>}/>
           <Route path="/about" element={<About lang={lang}/>}/>
+          <Route path="/recipe" element={<Recipe lang={lang}/>}/>
           <Route path="*" element={<NotFound lang={lang}/>}/>
         </Routes>
         <Footer lang={lang}/>

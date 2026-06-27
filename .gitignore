@@ -24,4 +24,4 @@ dist-ssr
 *.sw?
 
 .env
-tina/__generated__
+tina/__generated__.env.local
