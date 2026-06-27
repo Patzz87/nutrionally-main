@@ -6,6 +6,7 @@ const NAV = [
   {path:"/recipe", es:"Recetas", en:"Recipes"},
   {path:"/conditions", es:"Condiciones", en:"Conditions"},
   {path:"/blog", es:"Blog", en:"Blog"},
+  {path:"/resources", es:"Recursos", en:"Resources"},
   {path:"/about", es:"Nosotros", en:"About"},
 ];
 export default function Navbar({lang, setLang}) {
